@@ -1,11 +1,11 @@
 <?php
-namespace ElasticExport\Generators;
+namespace lenando\Generators;
 use Plenty\Modules\DataExchange\Contracts\CSVGenerator;
 use Plenty\Modules\Helper\Services\ArrayHelper;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\DataExchange\Models\FormatSetting;
-use ElasticExport\Helper\ElasticExportHelper;
+use lenando\Helper\lenando;
 use Plenty\Modules\Helper\Models\KeyValue;
 use Plenty\Modules\Market\Helper\Contracts\MarketPropertyHelperRepositoryContract;
 class lenandoDE extends CSVGenerator
