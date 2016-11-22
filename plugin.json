@@ -1,0 +1,8 @@
+{
+  "name": "lenando",
+  "description": null,
+  "namespace": "lenando",
+  "author": "lenando",
+  "type": "export",
+  "serviceProvider": "lenando\\lenandoServiceProvider"
+}
