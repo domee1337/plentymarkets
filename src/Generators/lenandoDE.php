@@ -626,7 +626,7 @@ class lenandoDE extends CSVGenerator
 
 private function getImageByNumber(Record $item, KeyValue $settings, int $number):string
 	{
-		$imageList = $this->elasticExportHelper->getImageList($item, $settings);
+		$imageList = $this->lenandoHelper->getImageList($item, $settings);
 		if(count($imageList) > 0 && array_key_exists($number, $imageList))
 		{
 			return (string)$imageList[$number];
