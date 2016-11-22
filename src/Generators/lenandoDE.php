@@ -1,19 +1,18 @@
-<?php // strict
-namespace lenando\Generators;
-
+<?php
+namespace ElasticExport\Generators;
 use Plenty\Modules\DataExchange\Contracts\CSVGenerator;
 use Plenty\Modules\Helper\Services\ArrayHelper;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\DataExchange\Models\FormatSetting;
-use lenando\Helper\lenandoHelper;
+use ElasticExport\Helper\ElasticExportHelper;
 use Plenty\Modules\Helper\Models\KeyValue;
-
+use Plenty\Modules\Market\Helper\Contracts\MarketPropertyHelperRepositoryContract;
 class lenandoDE extends CSVGenerator
 {
-	const string CHARACTER_TYPE_ENERGY_CLASS		= 'energie_klasse';
-	const string CHARACTER_TYPE_ENERGY_CLASS_GROUP	= 'energie_klassen_gruppe';
-	const string CHARACTER_TYPE_ENERGY_CLASS_UNTIL	= 'energie_klasse_bis';
+	const PROPERTY_TYPE_ENERGY_CLASS       = 'energy_efficiency_class';
+	const PROPERTY_TYPE_ENERGY_CLASS_GROUP = 'energy_efficiency_class_group';
+	const PROPERTY_TYPE_ENERGY_CLASS_UNTIL = 'energy_efficiency_class_until';
 
 	/*
 	 * @var lenandoHelper
