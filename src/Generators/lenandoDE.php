@@ -1,50 +1,65 @@
 <?php
-namespace lenando\Generators;
+namespace ElasticExport\Generators;
 use Plenty\Modules\DataExchange\Contracts\CSVGenerator;
 use Plenty\Modules\Helper\Services\ArrayHelper;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\DataExchange\Models\FormatSetting;
-use lenando\Helper\lenando;
+use ElasticExport\Helper\ElasticExportHelper;
 use Plenty\Modules\Helper\Models\KeyValue;
 use Plenty\Modules\Market\Helper\Contracts\MarketPropertyHelperRepositoryContract;
-class lenandoDE extends CSVGenerator
+class RakutenDE extends CSVGenerator
 {
 	const PROPERTY_TYPE_ENERGY_CLASS       = 'energy_efficiency_class';
 	const PROPERTY_TYPE_ENERGY_CLASS_GROUP = 'energy_efficiency_class_group';
 	const PROPERTY_TYPE_ENERGY_CLASS_UNTIL = 'energy_efficiency_class_until';
-
 	/*
-	 * @var lenandoHelper
+	 * @var ElasticExportHelper
 	 */
-	private lenandoHelper $lenandoHelper;
-
+	private $elasticExportHelper;
 	/*
 	 * @var ArrayHelper
 	 */
-	private ArrayHelper $arrayHelper;
-
+	private $arrayHelper;
+	/*
+	 * @var array
+	 */
+	private $attributeName = array();
+	/*
+	 * @var array
+	 */
+	private $attributeNameCombination = array();
 	/**
-	 * lenando constructor.
-	 * @param lenandoHelper $lenandoHelper
+	 * MarketPropertyHelperRepositoryContract $marketPropertyHelperRepository
+	 */
+	private $marketPropertyHelperRepository;
+	/**
+	 * Rakuten constructor.
+	 * @param ElasticExportHelper $elasticExportHelper
 	 * @param ArrayHelper $arrayHelper
+	 * @param MarketPropertyHelperRepositoryContract $marketPropertyHelperRepository
 	 */
-	public function __construct(lenandoHelper $lenandoHelper, ArrayHelper $arrayHelper)
+	public function __construct(
+		ElasticExportHelper $elasticExportHelper,
+		ArrayHelper $arrayHelper,
+		MarketPropertyHelperRepositoryContract $marketPropertyHelperRepository
+	)
 	{
-		$this->lenandoHelper = $lenandoHelper;
+		$this->elasticExportHelper = $elasticExportHelper;
 		$this->arrayHelper = $arrayHelper;
+		$this->marketPropertyHelperRepository = $marketPropertyHelperRepository;
 	}
-
 	/**
-	 * @param mixed $resultData
+	 * @param RecordList $resultData
+	 * @param array $formatSettings
 	 */
-	protected function generateContent(mixed $resultData, array<FormatSetting> $formatSettings = []):void
+	protected function generateContent($resultData, array $formatSettings = [])
 	{
 		if($resultData instanceof RecordList)
 		{
 			$settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
-
 			$this->setDelimiter(";");
+			
 			
 			$this->addCSVContent([
 				'external_id',
