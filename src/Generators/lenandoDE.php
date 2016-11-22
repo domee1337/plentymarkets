@@ -403,11 +403,30 @@ class lenandoDE extends CSVGenerator
 		}
 		
 	
-		$rrp = $this->lenandoHelper->getRecommendedRetailPrice($item, $settings) > $this->lenandoHelper->getPrice($item) ? $this->lenandoHelper->getRecommendedRetailPrice($item, $settings) : $this->lenandoHelper->getPrice($item);
-		$price = $this->lenandoHelper->getRecommendedRetailPrice($item, $settings) > $this->lenandoHelper->getPrice($item) ? $this->lenandoHelper->getPrice($item) : $this->lenandoHelper->getRecommendedRetailPrice($item, $settings);
-		$price = $price > 0 ? $price : '';
-		$unit = $this->getUnit($item, $settings);
-		$basePriceContent = (int)$item->variationBase->content;
+		$variationPrice = $this->lenandoHelper->getPrice($item);
+		$variationRrp = $this->lenandoHelper->getRecommendedRetailPrice($item, $settings);
+		$variationSpecialPrice = $this->lenandoHelper->getSpecialPrice($item, $settings);
+		$price = $variationPrice;
+		$reducedPrice = '';
+		$referenceReducedPrice = '';
+		if ($variationRrp > 0 && $variationRrp > $variationPrice)
+		{
+			$price = $variationRrp;
+			$referenceReducedPrice = 'UVP';
+			$reducedPrice = $variationPrice;
+		}
+		if ($variationSpecialPrice > 0 && $variationPrice > $variationSpecialPrice && $referenceReducedPrice == 'UVP')
+		{
+			$reducedPrice = $variationSpecialPrice;
+		}
+		else if ($variationSpecialPrice > 0 && $variationPrice > $variationSpecialPrice)
+		{
+			$reducedPrice = $variationSpecialPrice;
+			$referenceReducedPrice = 'VK';
+		}
+		$unit = $this->getUnit($item);
+		$basePriceContent = (float)$item->variationBase->content;
+
 		
 		
 
