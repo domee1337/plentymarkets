@@ -638,7 +638,7 @@ private function getImageByNumber(Record $item, KeyValue $settings, int $number)
 	}
 	/**
 	 * Returns the unit, if there is any unit configured, which is allowed
-	 * for the Rakuten.de API.
+	 * for the lenando.de API.
 	 *
 	 * @param  Record   $item
 	 * @return string
