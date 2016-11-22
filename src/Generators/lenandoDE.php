@@ -347,52 +347,30 @@ class lenandoDE extends CSVGenerator
      * @param array $attributeName
 	 * @return void
 	 */
-	private function buildParentWithChildrenRow(Record $item, KeyValue $settings, array<int, mixed> $attributeName):void
+	private function buildParentWithChildrenRow(Record $item, KeyValue $settings, array $attributeName)
 	{
-
-		if($item->variationBase->limitOrderByStockSelect == 2)
-		{
-			$variationAvailable = 1;
-			$stock = 999;
-		}
-		elseif($item->variationBase->limitOrderByStockSelect == 1 && $item->variationStock->stockNet > 0)
-		{
-			$variationAvailable = 1;
-			if($item->variationStock->stockNet > 999)
-			{
-				$stock = 999;
-			}
-			else
-			{
-				$stock = $item->variationStock->stockNet;
-			}
-		}
-		elseif($item->variationBase->limitOrderByStockSelect == 0)
-		{
-			$variationAvailable = 1;
-			if($item->variationStock->stockNet > 999)
-			{
-				$stock = 999;
-			}
-			else
-			{
-				if($item->variationStock->stockNet > 0)
-				{
-					$stock = $item->variationStock->stockNet;
-				}
-				else
-				{
-					$stock = 0;
-				}
-			}
-		}
-		else
-		{
-			$variationAvailable = 0;
-			$stock = 0;
-		}
-
-
+        $vat = $item->variationRetailPrice->vatValue;
+        if($vat == '19')
+        {
+            $vat = 1;
+        }
+        else if($vat == '10,7')
+        {
+            $vat = 4;
+        }
+        else if($vat == '7')
+        {
+            $vat = 2;
+        }
+        else if($vat == '0')
+        {
+            $vat = 3;
+        }
+        else
+        {
+            //bei anderen Steuersaetzen immer 19% nehmen
+            $vat = 1;
+        }
         if($item->variationBase->limitOrderByStockSelect == 2)
         {
             $inventoryManagementActive = 0;
