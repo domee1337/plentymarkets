@@ -1,17 +1,14 @@
-<?php // strict
+<?php
 namespace lenando\Filters;
-
 use Plenty\Modules\DataExchange\Contracts\Filters;
 use Plenty\Modules\DataExchange\Models\FormatSetting;
 use Plenty\Modules\Helper\Services\ArrayHelper;
-
 class lenandoDE extends Filters
 {
     /*
 	 * @var ArrayHelper
 	 */
-	private ArrayHelper $arrayHelper;
-
+	private $arrayHelper;
     /**
      * lenando constructor.
      * @param ArrayHelper $arrayHelper
@@ -20,16 +17,14 @@ class lenandoDE extends Filters
     {
 		$this->arrayHelper = $arrayHelper;
     }
-
     /**
      * Generate filters.
-     * @param  array<FormatSetting> $formatSettings = []
+     * @param  array $formatSettings = []
      * @return array
      */
-    public function generateFilters(array<FormatSetting> $formatSettings = []):array<string, mixed>
+    public function generateFilters(array $formatSettings = []):array
     {
         $settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
-
 		$searchFilter = [
 			'variationBase.isActive?' => [],
             'variationVisibility.isVisibleForMarketplace' => [
@@ -39,7 +34,6 @@ class lenandoDE extends Filters
 				]
             ]
 		];
-
 		return $searchFilter;
     }
 }
