@@ -286,28 +286,8 @@ class lenandoDE extends CSVGenerator
 			$inventoryManagementActive = 1;
 			$stock = 0;
 		}
-		$vat = $item->variationRetailPrice->vatValue;
-		if($vat == '19')
-		{
-			$vat = 1;
-		}
-		else if($vat == '10,7')
-		{
-			$vat = 4;
-		}
-		else if($vat == '7')
-		{
-			$vat = 2;
-		}
-		else if($vat == '0')
-		{
-			$vat = 3;
-		}
-		else
-		{
-			//bei anderen Steuersätzen immer 19% nehmen
-			$vat = 1;
-		}
+		
+		
 		$variationPrice = $this->lenandoHelper->getPrice($item);
 		$variationRrp = $this->lenandoHelper->getRecommendedRetailPrice($item, $settings);
 		$variationSpecialPrice = $this->lenandoHelper->getSpecialPrice($item, $settings);
@@ -336,7 +316,7 @@ class lenandoDE extends CSVGenerator
 			'Artikelnummer'			=> $item->itemBase->id,
 			'ean'				=> $this->lenandoHelper->getBarcodeByType($item, $settings->get('barcode')),
 			'Hersteller'			=> $item->itemBase->producer,
-			'Steuersatz'			=> $vat,
+			'Steuersatz'			=> $item->variationRetailPrice->vatValue,
 			'Preis'				=> number_format($price, 2, '.', ''),
 			'Kurzbeschreibung'		=> '',
 			'Beschreibung'			=> $this->lenandoHelper->getDescription($item, $settings, 5000),
@@ -395,28 +375,7 @@ class lenandoDE extends CSVGenerator
 	 */
 	private function buildParentWithChildrenRow(Record $item, KeyValue $settings, array $attributeName)
 	{
-        $vat = $item->variationRetailPrice->vatValue;
-        if($vat == '19')
-        {
-            $vat = 1;
-        }
-        else if($vat == '10,7')
-        {
-            $vat = 4;
-        }
-        else if($vat == '7')
-        {
-            $vat = 2;
-        }
-        else if($vat == '0')
-        {
-            $vat = 3;
-        }
-        else
-        {
-            //bei anderen Steuersaetzen immer 19% nehmen
-            $vat = 1;
-        }
+        
         if($item->variationBase->limitOrderByStockSelect == 2)
         {
             $inventoryManagementActive = 0;
@@ -433,12 +392,37 @@ class lenandoDE extends CSVGenerator
         {
             $inventoryManagementActive = 1;
         }
+	
+	$variationPrice = $this->lenandoHelper->getPrice($item);
+		$variationRrp = $this->lenandoHelper->getRecommendedRetailPrice($item, $settings);
+		$variationSpecialPrice = $this->lenandoHelper->getSpecialPrice($item, $settings);
+		$price = $variationPrice;
+		$reducedPrice = '';
+		$referenceReducedPrice = '';
+		if ($variationRrp > 0 && $variationRrp > $variationPrice)
+		{
+			$price = $variationRrp;
+			$referenceReducedPrice = 'UVP';
+			$reducedPrice = $variationPrice;
+		}
+		if ($variationSpecialPrice > 0 && $variationPrice > $variationSpecialPrice && $referenceReducedPrice == 'UVP')
+		{
+			$reducedPrice = $variationSpecialPrice;
+		}
+		else if ($variationSpecialPrice > 0 && $variationPrice > $variationSpecialPrice)
+		{
+			$reducedPrice = $variationSpecialPrice;
+			$referenceReducedPrice = 'VK';
+		}
+		$unit = $this->getUnit($item);
+		$basePriceContent = (float)$item->variationBase->content;
+		
 		$data = [
 			'Produktname'			=> $this->lenandoHelper->getName($item, $settings, 150),
 			'Artikelnummer'			=> $item->itemBase->id,
 			'ean'				=> $this->lenandoHelper->getBarcodeByType($item, $settings->get('barcode')),
 			'Hersteller'			=> $item->itemBase->producer,
-			'Steuersatz'			=> $vat,
+			'Steuersatz'			=> $item->variationRetailPrice->vatValue,
 			'Preis'				=> number_format($price, 2, '.', ''),
 			'Kurzbeschreibung'		=> '',
 			'Beschreibung'			=> $this->lenandoHelper->getDescription($item, $settings, 5000),
@@ -566,7 +550,7 @@ class lenandoDE extends CSVGenerator
 			'Artikelnummer'			=> $item->itemBase->id,
 			'ean'				=> $this->lenandoHelper->getBarcodeByType($item, $settings->get('barcode')),
 			'Hersteller'			=> $item->itemBase->producer,
-			'Steuersatz'			=> $vat,
+			'Steuersatz'			=> $item->variationRetailPrice->vatValue,
 			'Preis'				=> number_format($price, 2, '.', ''),
 			'Kurzbeschreibung'		=> '',
 			'Beschreibung'			=> $this->lenandoHelper->getDescription($item, $settings, 5000),
