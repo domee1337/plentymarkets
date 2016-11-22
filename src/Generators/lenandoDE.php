@@ -1,22 +1,22 @@
 <?php
-namespace ElasticExport\Generators;
+namespace lenando\Generators;
 use Plenty\Modules\DataExchange\Contracts\CSVGenerator;
 use Plenty\Modules\Helper\Services\ArrayHelper;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\DataExchange\Models\FormatSetting;
-use ElasticExport\Helper\ElasticExportHelper;
+use lenando\Helper\lenandoHelper;
 use Plenty\Modules\Helper\Models\KeyValue;
 use Plenty\Modules\Market\Helper\Contracts\MarketPropertyHelperRepositoryContract;
-class RakutenDE extends CSVGenerator
+class lenandoDE extends CSVGenerator
 {
 	const PROPERTY_TYPE_ENERGY_CLASS       = 'energy_efficiency_class';
 	const PROPERTY_TYPE_ENERGY_CLASS_GROUP = 'energy_efficiency_class_group';
 	const PROPERTY_TYPE_ENERGY_CLASS_UNTIL = 'energy_efficiency_class_until';
 	/*
-	 * @var ElasticExportHelper
+	 * @var lenandoHelper
 	 */
-	private $elasticExportHelper;
+	private $lenandoHelper;
 	/*
 	 * @var ArrayHelper
 	 */
@@ -34,18 +34,18 @@ class RakutenDE extends CSVGenerator
 	 */
 	private $marketPropertyHelperRepository;
 	/**
-	 * Rakuten constructor.
-	 * @param ElasticExportHelper $elasticExportHelper
+	 * lenando constructor.
+	 * @param lenandoHelper $lenandoHelper
 	 * @param ArrayHelper $arrayHelper
 	 * @param MarketPropertyHelperRepositoryContract $marketPropertyHelperRepository
 	 */
 	public function __construct(
-		ElasticExportHelper $elasticExportHelper,
+		lenandoHelper $lenandoHelper,
 		ArrayHelper $arrayHelper,
 		MarketPropertyHelperRepositoryContract $marketPropertyHelperRepository
 	)
 	{
-		$this->elasticExportHelper = $elasticExportHelper;
+		$this->lenandoHelper = $lenandoHelper;
 		$this->arrayHelper = $arrayHelper;
 		$this->marketPropertyHelperRepository = $marketPropertyHelperRepository;
 	}
