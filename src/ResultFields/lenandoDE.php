@@ -1,10 +1,8 @@
-<?php //strict
+<?php
 namespace lenando\ResultFields;
-
 use Plenty\Modules\DataExchange\Contracts\ResultFields;
 use Plenty\Modules\DataExchange\Models\FormatSetting;
 use Plenty\Modules\Helper\Services\ArrayHelper;
-
 /**
  * Class lenandoDE
  * @package lenando\ResultFields
@@ -14,8 +12,7 @@ class lenandoDE extends ResultFields
 	/*
 	 * @var ArrayHelper
 	 */
-	private ArrayHelper $arrayHelper;
-
+	private $arrayHelper;
 	/**
 	 * lenando constructor.
 	 * @param ArrayHelper $arrayHelper
@@ -24,35 +21,22 @@ class lenandoDE extends ResultFields
 	{
 		$this->arrayHelper = $arrayHelper;
 	}
-
 	/**
 	 * Generate result fields.
-	 * @param  array<FormatSetting> $formatSettings = []
+	 * @param  array $formatSettings = []
 	 * @return array
 	 */
-	public function generateResultFields(array<FormatSetting> $formatSettings = []):array<string, mixed>
+	public function generateResultFields(array $formatSettings = []):array
 	{
 		$settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
-
-        if($settings->get('variations') == 'mainVariations')
-        {
-            $this->setGroupByList(['groupBy.itemIdGetPrimaryVariation']);
-        }
-		else
-		{
-			$this->setOrderByList(['orderBy.itemId' => 'asc']);
-		}
-
-
+        $this->setOrderByList(['orderBy.itemId' => 'asc']);
         $itemDescriptionFields = ['urlContent'];
         $itemDescriptionFields[] = ($settings->get('nameId')) ? 'name' . $settings->get('nameId') : 'name1';
-
 		if($settings->get('descriptionType') == 'itemShortDescription'
             || $settings->get('previewTextType') == 'itemShortDescription')
         {
             $itemDescriptionFields[] = 'shortDescription';
         }
-
         if($settings->get('descriptionType') == 'itemDescription'
             || $settings->get('descriptionType') == 'itemDescriptionAndTechnicalData'
             || $settings->get('previewTextType') == 'itemDescription'
@@ -60,7 +44,6 @@ class lenandoDE extends ResultFields
         {
             $itemDescriptionFields[] = 'description';
         }
-
         if($settings->get('descriptionType') == 'technicalData'
             || $settings->get('descriptionType') == 'itemDescriptionAndTechnicalData'
             || $settings->get('previewTextType') == 'technicalData'
@@ -68,12 +51,10 @@ class lenandoDE extends ResultFields
         {
             $itemDescriptionFields[] = 'technicalData';
         }
-
 		$fields = [
 			'itemBase'=> [
 				'id',
-				'producer',
-				'condition',
+				'producerId',
 				'free1',
 				'free2',
 				'free3',
@@ -94,21 +75,24 @@ class lenandoDE extends ResultFields
 				'free18',
 				'free19',
 				'free20',
-                'variationCount',
-                'hasAttribute',
 				'tradoriaCategory'
 			],
-
 			'itemDescription' => [
                 'params' => [
                     'language' => $settings->get('lang') ? $settings->get('lang') : 'de',
                 ],
                 'fields' => $itemDescriptionFields,
             ],
-
+			'itemPropertyList' => [
+				'params' => [],
+				'fields' => [
+					'propertyId',
+					'propertyValue',
+				]
+			],
 			'variationImageList' => [
 				'params' => [
-					'type' => 'item_variation',
+					'type' => 'all',
 				],
 				'referenceMarketplace' => $settings->get('referrerId') ? $settings->get('referrerId') : 106,
 				'fields' => [
@@ -117,48 +101,58 @@ class lenandoDE extends ResultFields
 					'position',
 				]
 			],
-
 			'variationBase' => [
 				'availability',
 				'attributeValueSetId',
 				'content',
-				'customNumber',
 				'id',
 				'limitOrderByStockSelect',
 				'model',
 				'unitId',
 				'vatId',
+                'primaryVariation',
 			],
-
 			'variationRecommendedRetailPrice' => [
-				'price',
+				'params' => [
+					'referrerId' => $settings->get('referrerId') ? $settings->get('referrerId') : 106,
+				],
+				'fields' => [
+					'price',
+				],
 			],
-
             'variationRetailPrice' => [
-                'price',
+				'params' => [
+					'referrerId' => $settings->get('referrerId') ? $settings->get('referrerId') : 106,
+				],
+				'fields' => [
+					'price',
+				],
             ],
-
+			'variationSpecialOfferRetailPrice' => [
+				'params' => [
+					'referrerId' => $settings->get('referrerId') ? $settings->get('referrerId') : 106,
+				],
+				'fields' => [
+					'retailPrice',
+				],
+			],
 			'variationStandardCategory' => [
 				'params' => [
-					'plentyId' => $settings->get('plentyId') ? $settings->get('plentyId') : 1000,
+					'plentyId' => $settings->get('plentyId'),
 				],
 				'fields' => [
 					'categoryId',
-					'plentyId',
-					'manually',
 				],
 			],
-
 			'variationBarcodeList' => [
 				'params' => [
 					'barcodeType' => $settings->get('barcode') ? $settings->get('barcode') : 'EAN',
 				],
 				'fields' => [
 					'code',
-					'barcodeId',
+					'barcodeType',
 				]
 			],
-
 			'variationMarketStatus' => [
 				'params' => [
 					'marketId' => 106
@@ -167,7 +161,6 @@ class lenandoDE extends ResultFields
 					'sku'
 				]
 			],
-
 			'variationStock' => [
 				'params' => [
 					'type' => 'virtual'
@@ -176,14 +169,11 @@ class lenandoDE extends ResultFields
 					'stockNet'
 				]
 			],
-
 			'variationAttributeValueList' => [
 				'attributeId',
 				'attributeValueId'
 			]
 		];
-
-
 		return $fields;
 	}
 }
