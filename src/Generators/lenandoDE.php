@@ -605,44 +605,74 @@ class lenandoDE extends CSVGenerator
 		$this->addCSVContent(array_values($data));
 	}
 
-	// gibt das jeweilige Bild
-	private function getImageByNumber(Record $item, KeyValue $settings, int $number):string
+private function getImageByNumber(Record $item, KeyValue $settings, int $number):string
 	{
-		$imageList = $this->lenandoHelper->getImageList($item, $settings);
-		
+		$imageList = $this->elasticExportHelper->getImageList($item, $settings);
 		if(count($imageList) > 0 && array_key_exists($number, $imageList))
 		{
-			return $imageList[$number];
+			return (string)$imageList[$number];
 		}
 		else
 		{
 			return '';
 		}
 	}
-
-	// Wandelt die Einheitsangaben um
-	private function getUnit(Record $item, KeyValue $settings):string
+	/**
+	 * Returns the unit, if there is any unit configured, which is allowed
+	 * for the Rakuten.de API.
+	 *
+	 * @param  Record   $item
+	 * @return string
+	 */
+	private function getUnit(Record $item):string
 	{
-		$unit = $this->lenandoHelper->getBasePriceDetailUnit($item, $settings);
-
-		switch($unit)
+		switch((int) $item->variationBase->unitId)
 		{
-			case 'MLT':
+			case '32':
 				return 'ml'; // Milliliter
-			case 'LTR':
+			case '5':
 				return 'l'; // Liter
-			case 'GRM':
+			case '3':
 				return 'g'; // Gramm
-			case 'KGM':
+			case '2':
 				return 'kg'; // Kilogramm
-			case 'CTM':
+			case '51':
 				return 'cm'; // Zentimeter
-			case 'MTR':
+			case '31':
 				return 'm'; // Meter
-			case 'MTK':
+			case '38':
 				return 'm²'; // Quadratmeter
 			default:
 				return '';
 		}
+	}
+	/**
+	 * Get item characters that match referrer from settings and a given component id.
+	 * @param  Record   $item
+	 * @param  float    $marketId
+	 * @param  string  $externalComponent
+	 * @return string
+	 */
+	private function getItemPropertyByExternalComponent(Record $item, float $marketId, $externalComponent):string
+	{
+		$marketProperties = $this->marketPropertyHelperRepository->getMarketProperty($marketId);
+		foreach($item->itemPropertyList as $property)
+		{
+			foreach($marketProperties as $marketProperty)
+			{
+				if(is_array($marketProperty) && count($marketProperty) > 0 && $marketProperty['character_item_id'] == $property->propertyId)
+				{
+					if (strlen($externalComponent) > 0 && strpos($marketProperty['external_component'], $externalComponent) !== false)
+					{
+						$list = explode(':', $marketProperty['external_component']);
+						if (isset($list[1]) && strlen($list[1]) > 0)
+						{
+							return $list[1];
+						}
+					}
+				}
+			}
+		}
+		return '';
 	}
 }
