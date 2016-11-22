@@ -337,7 +337,7 @@ class lenandoDE extends CSVGenerator
 			'ean'				=> $this->lenandoHelper->getBarcodeByType($item, $settings->get('barcode')),
 			'Hersteller'			=> $item->itemBase->producer,
 			'Steuersatz'			=> $vat,
-			'Preis'				=> number_format($rrp, 2, '.', ''),
+			'Preis'				=> number_format($price, 2, '.', ''),
 			'Kurzbeschreibung'		=> '',
 			'Beschreibung'			=> $this->lenandoHelper->getDescription($item, $settings, 5000),
 			'Versandkosten'			=> '',
