@@ -1,4 +1,4 @@
-<?php // strict
+<?php
 namespace lenando\Helper;
 use Plenty\Modules\Category\Contracts\CategoryBranchMarketplaceRepositoryContract;
 use Plenty\Modules\Category\Contracts\CategoryBranchRepositoryContract;
@@ -6,20 +6,17 @@ use Plenty\Modules\Category\Models\CategoryBranchMarketplace;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 use Plenty\Modules\Helper\Models\KeyValue;
 use Plenty\Modules\Category\Models\CategoryBranch;
-use Plenty\Modules\Item\Manufacturer\Contracts\ManufacturerRepositoryContract;
-use Plenty\Modules\Item\Manufacturer\Models\Manufacturer;
+use Plenty\Modules\Market\Helper\Contracts\MarketItemHelperRepositoryContract;
+use Plenty\Modules\Market\Helper\Contracts\MarketCategoryHelperRepositoryContract;
+use Plenty\Modules\Market\Helper\Contracts\MarketPropertyHelperRepositoryContract;
+use Plenty\Modules\Market\Helper\Contracts\MarketAttributeHelperRepositoryContract;
 use Plenty\Modules\Item\Unit\Contracts\UnitNameRepositoryContract;
 use Plenty\Modules\Item\Unit\Models\UnitName;
-use Plenty\Modules\Item\Attribute\Contracts\AttributeValueNameRepositoryContract;
-use Plenty\Modules\Item\Attribute\Models\AttributeValueName;
-use Plenty\Modules\Item\Attribute\Models\AttributeName;
 use Plenty\Modules\Item\Property\Contracts\PropertyItemNameRepositoryContract;
 use Plenty\Modules\Helper\Contracts\UrlBuilderRepositoryContract;
 use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
 use Plenty\Modules\Category\Models\Category;
-use Plenty\Modules\Item\Property\Contracts\PropertyMarketComponentRepositoryContract;
-use Plenty\Modules\Item\Property\Models\PropertyMarketComponent;
-use Plenty\Modules\Item\DataLayer\Models\ItemCharacter;
+use Plenty\Modules\Item\DataLayer\Models\ItemProperty;
 use Plenty\Modules\Order\Shipping\Models\DefaultShipping;
 use Plenty\Modules\Order\Payment\Method\Contracts\PaymentMethodRepositoryContract;
 use Plenty\Modules\Order\Payment\Method\Models\PaymentMethod;
@@ -31,155 +28,138 @@ use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\Order\Shipping\Countries\Models\Country;
 use Plenty\Modules\System\Contracts\WebstoreRepositoryContract;
 use Plenty\Modules\System\Models\Webstore;
-use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
-use Plenty\Modules\Item\VariationSku\Models\VariationSku;
-use Plenty\Modules\Item\Availability\Contracts\AvailabilityRepositoryContract;
-use Plenty\Modules\Item\Attribute\Contracts\AttributeNameRepositoryContract;
 /**
  * Class lenandoHelper
  * @package lenandoHelper\Helper
  */
 class lenandoHelper
 {
-    const string SHIPPING_COST_TYPE_FLAT = 'flat';
-    const string SHIPPING_COST_TYPE_CONFIGURATION = 'configuration';
-    const string IMAGE_POSITION0 = 'position0';
-    const string IMAGE_FIRST = 'firstImage';
-    const int REMOVE_HTML_TAGS = 1;
-    const int KEEP_HTML_TAGS = 0;
-    const int ITEM_URL_NO = 0;
-    const int ITEM_URL_YES = 1;
-    const int TRANSFER_ITEM_AVAILABILITY_NO = 0;
-    const int TRANSFER_ITEM_AVAILABILITY_YES = 1;
-    const int TRANSFER_OFFER_PRICE_NO = 0;
-    const int TRANSFER_OFFER_PRICE_YES = 1;
-    const int TRANSFER_RRP_YES = 1;
-    const int TRANSFER_RRP_NO = 0;
-    const string BARCODE_EAN = 'EAN_13';
-    const string BARCODE_ISBN = 'ISBN';
+    const SHIPPING_COST_TYPE_FLAT = 'flat';
+    const SHIPPING_COST_TYPE_CONFIGURATION = 'configuration';
+    const IMAGE_POSITION0 = 'position0';
+    const IMAGE_FIRST = 'firstImage';
+    const REMOVE_HTML_TAGS = 1;
+    const KEEP_HTML_TAGS = 0;
+    const ITEM_URL_NO = 0;
+    const ITEM_URL_YES = 1;
+    const TRANSFER_ITEM_AVAILABILITY_NO = 0;
+    const TRANSFER_ITEM_AVAILABILITY_YES = 1;
+    const TRANSFER_OFFER_PRICE_NO = 0;
+    const TRANSFER_OFFER_PRICE_YES = 1;
+    const TRANSFER_RRP_YES = 1;
+    const TRANSFER_RRP_NO = 0;
+    const BARCODE_EAN = 'EAN_13';
+    const BARCODE_ISBN = 'ISBN';
     /**
      * CategoryBranchRepositoryContract $categoryBranchRepository
      */
-    private CategoryBranchRepositoryContract $categoryBranchRepository;
+    private $categoryBranchRepository;
     /**
      * UnitNameRepositoryContract $unitNameRepository
      */
-    private UnitNameRepositoryContract $unitNameRepository;
-	/**
-	 * AttributeValueNameRepositoryContract $attributeValueNameRepository
-	 */
-    private AttributeValueNameRepositoryContract $attributeValueNameRepository;
-    /**
-     * AttributeNameRepositoryContract $attributeNameRepository
-     */
-    private AttributeNameRepositoryContract $attributeNameRepository;
+    private $unitNameRepository;
     /**
      * PropertyItemNameRepositoryContract $propertyItemNameRepository
      */
-    private PropertyItemNameRepositoryContract $propertyItemNameRepository;
+    private $propertyItemNameRepository;
     /**
      * CategoryBranchMarketplaceRepositoryContract $categoryBranchMarketplaceRepository
      */
-    private CategoryBranchMarketplaceRepositoryContract $categoryBranchMarketplaceRepository;
+    private $categoryBranchMarketplaceRepository;
     /**
      * UrlBuilderRepositoryContract $urlBuilderRepository
      */
-    private UrlBuilderRepositoryContract $urlBuilderRepository;
+    private $urlBuilderRepository;
     /**
      * CategoryRepositoryContract $categoryRepository
      */
-    private CategoryRepositoryContract $categoryRepository;
-    /**
-     * PropertyMarketComponentRepositoryContract $propertyMarketComponentRepository;s
-     */
-    private PropertyMarketComponentRepositoryContract $propertyMarketComponentRepository;
+    private $categoryRepository;
     /**
      * @var PaymentMethodRepositoryContract $paymentMethodRepository
      */
-    private PaymentMethodRepositoryContract $paymentMethodRepository;
+    private $paymentMethodRepository;
     /**
      * @var DefaultShippingCostRepositoryContract $defaultShippingCostRepository
      */
-    private DefaultShippingCostRepositoryContract $defaultShippingCostRepository;
+    private $defaultShippingCostRepository;
     /**
      * ConfigRepository $configRepository
      */
-    private ConfigRepository $configRepository;
+    private $configRepository;
     /**
      * CountryRepositoryContract $countryRepository
      */
-    private CountryRepositoryContract $countryRepository;
+    private $countryRepository;
     /**
      * WebstoreRepositoryContract $webstoreRepository
      */
-    private WebstoreRepositoryContract $webstoreRepository;
-    /**
-     * VariationSkuRepositoryContract $variationSkuRepository
-     */
-    private VariationSkuRepositoryContract $variationSkuRepository;
-    /**
-     * AvailabilityRepositoryContract $availabilityRepositoryContract
-     */
-    private AvailabilityRepositoryContract $availabilityRepository;
+    private $webstoreRepository;
 	/**
-	 * ManufacturerRepositoryContract $manufacturerRepository
+	 * MarketItemHelperRepositoryContract $marketItemHelperRepository
 	 */
-	private ManufacturerRepositoryContract $manufacturerRepository;
+	private $marketItemHelperRepository;
+	/**
+	 * MarketCategoryHelperRepositoryContract $marketCategoryHelperRepository
+	 */
+	private $marketCategoryHelperRepository;
+	/**
+	 * MarketPropertyHelperRepositoryContract $marketPropertyHelperRepository
+	 */
+	private $marketPropertyHelperRepository;
+	/**
+	 * MarketAttributeHelperRepositoryContract $marketAttributeHelperRepository
+	 */
+	private $marketAttributeHelperRepository;
     /**
      * lenandoHelper constructor.
      *
      * @param CategoryBranchRepositoryContract $categoryBranchRepository
      * @param UnitNameRepositoryContract $unitNameRepository
-     * @param AttributeValueNameRepositoryContract $attributeValueNameRepository
-     * @param AttributeNameRepositoryContract $attributeNameRepository
      * @param PropertyItemNameRepositoryContract $propertyItemNameRepository
      * @param CategoryBranchMarketplaceRepositoryContract $categoryBranchMarketplaceRepository
      * @param UrlBuilderRepositoryContract $urlBuilderRepository
      * @param CategoryRepositoryContract $categoryRepository
-     * @param PropertyMarketComponentRepositoryContract $propertyMarketComponentRepository
      * @param PaymentMethodRepositoryContract $paymentMethodRepository
      * @param ConfigRepository $configRepository
      * @param CountryRepositoryContract $countryRepository
      * @param WebstoreRepositoryContract $webstoreRepository
-     * @param VariationSkuRepositoryContract $variationSkuRepository
-     * @param AvailabilityRepositoryContract $availabilityRepository
+	 * @param MarketItemHelperRepositoryContract $marketItemHelperRepository
+	 * @param MarketCategoryHelperRepositoryContract $marketCategoryHelperRepository
+	 * @param MarketPropertyHelperRepositoryContract $marketPropertyHelperRepository
+	 * @param MarketAttributeHelperRepositoryContract $marketAttributeHelperRepository
      */
     public function __construct(CategoryBranchRepositoryContract $categoryBranchRepository,
                                 UnitNameRepositoryContract $unitNameRepository,
-                                AttributeValueNameRepositoryContract $attributeValueNameRepository,
-                                AttributeNameRepositoryContract $attributeNameRepository,
                                 PropertyItemNameRepositoryContract $propertyItemNameRepository,
                                 CategoryBranchMarketplaceRepositoryContract $categoryBranchMarketplaceRepository,
                                 UrlBuilderRepositoryContract $urlBuilderRepository,
                                 CategoryRepositoryContract $categoryRepository,
-                                PropertyMarketComponentRepositoryContract $propertyMarketComponentRepository,
                         		PaymentMethodRepositoryContract $paymentMethodRepository,
                                 DefaultShippingCostRepositoryContract $defaultShippingCostRepository,
                                 ConfigRepository $configRepository,
                                 CountryRepositoryContract $countryRepository,
                                 WebstoreRepositoryContract $webstoreRepository,
-                                VariationSkuRepositoryContract $variationSkuRepository,
-                                AvailabilityRepositoryContract $availabilityRepository,
-								ManufacturerRepositoryContract $manufacturerRepository
+								MarketItemHelperRepositoryContract $marketItemHelperRepository,
+								MarketCategoryHelperRepositoryContract $marketCategoryHelperRepository,
+								MarketPropertyHelperRepositoryContract $marketPropertyHelperRepository,
+								MarketAttributeHelperRepositoryContract $marketAttributeHelperRepository
     )
     {
         $this->categoryBranchRepository = $categoryBranchRepository;
-        $this->unitNameRepository = $unitNameRepository;
-        $this->attributeValueNameRepository = $attributeValueNameRepository;
-        $this->attributeNameRepository = $attributeNameRepository;
-        $this->propertyItemNameRepository = $propertyItemNameRepository;
+		$this->unitNameRepository = $unitNameRepository;
+		$this->propertyItemNameRepository = $propertyItemNameRepository;
         $this->categoryBranchMarketplaceRepository = $categoryBranchMarketplaceRepository;
         $this->urlBuilderRepository = $urlBuilderRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->propertyMarketComponentRepository = $propertyMarketComponentRepository;
 		$this->paymentMethodRepository = $paymentMethodRepository;
         $this->defaultShippingCostRepository = $defaultShippingCostRepository;
         $this->configRepository = $configRepository;
         $this->countryRepository = $countryRepository;
         $this->webstoreRepository = $webstoreRepository;
-        $this->variationSkuRepository = $variationSkuRepository;
-        $this->availabilityRepository = $availabilityRepository;
-		$this->manufacturerRepository = $manufacturerRepository;
+		$this->marketItemHelperRepository = $marketItemHelperRepository;
+		$this->marketCategoryHelperRepository = $marketCategoryHelperRepository;
+		$this->marketPropertyHelperRepository = $marketPropertyHelperRepository;
+		$this->marketAttributeHelperRepository = $marketAttributeHelperRepository;
     }
     /**
      * Get name.
@@ -191,25 +171,26 @@ class lenandoHelper
      */
     public function getName(Record $item, KeyValue $settings, int $defaultNameLength = 0):string
 	{
+		$name = '';
 		switch($settings->get('nameId'))
 		{
 			case 3:
-				$name = $item->itemDescription->name3;
+				$name = (string)$item->itemDescription->name3;
                 break;
 			case 2:
-				$name = $item->itemDescription->name2;
+				$name = (string)$item->itemDescription->name2;
                 break;
 			case 1:
 			default:
-				$name = $item->itemDescription->name1;
+				$name = (string)$item->itemDescription->name1;
                 break;
 		}
-        return $this->cleanName($name, $settings->get('nameMaxLength') ? $settings->get('nameMaxLength') : $defaultNameLength);
+        return $this->cleanName($name, (int)$settings->get('nameMaxLength') ? (int)$settings->get('nameMaxLength') : (int)$defaultNameLength);
     }
     /**
      * Clean name to a defined length. If maxLength is 0 than named is returned intact.
-     * @param  string name
-     * @param  int maxLength
+     * @param  string 	$name
+     * @param  int 		$maxLength
      * @return string
      */
     public function cleanName(string $name, int $maxLength = 0):string
@@ -303,54 +284,25 @@ class lenandoHelper
 	 * Get variation availability days.
 	 * @param  Record   $item
 	 * @param  KeyValue $settings
-	 * @return mixed
+	 * @param  bool 	$returnAvailabilityName = true
+	 * @return string
 	 */
-	public function getAvailability(Record $item, KeyValue $settings, bool $returnAvailabilityName = true):mixed
+	public function getAvailability(Record $item, KeyValue $settings, bool $returnAvailabilityName = true):string
 	{
         if($settings->get('transferItemAvailability') == self::TRANSFER_ITEM_AVAILABILITY_YES)
 		{
             $availabilityIdString = 'itemAvailability' . $item->variationBase->availability;
-		    return $settings->get($availabilityIdString);
+		    return (string)$settings->get($availabilityIdString);
 		}
-        $availability = $this->availabilityRepository->findAvailability($item->variationBase->availability < 0 ? 10 : (int) $item->variationBase->availability);
-        if($availability instanceof Availability)
-        {
-            $name = $this->getAvailabilityName($availability, $settings->get('lang'));
-            if($returnAvailabilityName && strlen($name) > 0)
-            {
-                return $name;
-            }
-            elseif(!$returnAvailabilityName && $availability->averageDays > 0)
-            {
-                return (int) $availability->averageDays;
-            }
-        }
-		return '';
+		return $this->marketItemHelperRepository->getAvailability($item->variationBase->availability, $settings->get('lang'), $returnAvailabilityName);
 	}
-    /**
-     * Get availability name for a vigen availability and lang.
-     * @param Availability $availability
-     * @param string $language
-     * @return string
-     */
-    private function getAvailabilityName(Availability $availability, string $language):string
-    {
-        foreach($availability->languages as $availabilityLanguage)
-        {
-            if($availabilityLanguage->language == $language)
-            {
-                return $availabilityLanguage->name;
-            }
-        }
-        return '';
-    }
     /**
      * Get the item URL.
      * @param  Record $item
      * @param  KeyValue $settings
-     * @param  ?bool $addReferrer = true  Choose if referrer id should be added as parameter.
-     * @param  ?bool $useIntReferrer = false Choose if referrer id should be used as integer.
-     * @param  ?bool $useHttps = true Choose if https protocol should be used.
+     * @param  bool $addReferrer = true  Choose if referrer id should be added as parameter.
+     * @param  bool $useIntReferrer = false Choose if referrer id should be used as integer.
+     * @param  bool $useHttps = true Choose if https protocol should be used.
      * @return string Item url.
      */
     public function getUrl(Record $item, KeyValue $settings, bool $addReferrer = true, bool $useIntReferrer = false, bool $useHttps = true):string
@@ -385,55 +337,7 @@ class lenandoHelper
      */
     public function getCategory(int $categoryId, string $lang, int $plentyId, string $separator = ' > '):string
 	{
-        $categoryBranchList = array();
-        if($categoryId > 0)
-        {
-            $categoryBranch = $this->categoryBranchRepository->find($categoryId);
-            if(!is_null($categoryBranch) && $categoryBranch instanceof CategoryBranch)
-            {
-                $category1 = $this->categoryRepository->get($categoryBranch->category1Id, $lang);
-                $category2 = $this->categoryRepository->get($categoryBranch->category2Id, $lang);
-                $category3 = $this->categoryRepository->get($categoryBranch->category3Id, $lang);
-                $category4 = $this->categoryRepository->get($categoryBranch->category4Id, $lang);
-                $category5 = $this->categoryRepository->get($categoryBranch->category5Id, $lang);
-                $category6 = $this->categoryRepository->get($categoryBranch->category6Id, $lang);
-                if($category1 instanceof Category)
-                {
-                    $category1Details = $category1->details[0];
-                    $categoryBranchList[] = $category1Details->name;
-                }
-                if($category2 instanceof Category)
-                {
-                    $category2Details = $category2->details[0];
-                    $categoryBranchList[] = $category2Details->name;
-                }
-                if($category3 instanceof Category)
-                {
-                    $category3Details = $category3->details[0];
-                    $categoryBranchList[] = $category3Details->name;
-                }
-                if($category4 instanceof Category)
-                {
-                    $category4Details = $category4->details[0];
-                    $categoryBranchList[] = $category4Details->name;
-                }
-                if($category5 instanceof Category)
-                {
-                    $category5Details = $category5->details[0];
-                    $categoryBranchList[] = $category5Details->name;
-                }
-                if($category6 instanceof Category)
-                {
-                    $category6Details = $category6->details[0];
-                    $categoryBranchList[] = $category6Details->name;
-                }
-                if(is_array($categoryBranchList) && count($categoryBranchList) > 0)
-                {
-                    return implode($separator, $categoryBranchList);
-                }
-            }
-        }
-        return '';
+		return $this->marketCategoryHelperRepository->getCategoryBranchName($categoryId, $lang, $plentyId, $separator);
 	}
     public function getCategoryBranch(Record $item, KeyValue $settings, int $categoryLevel):string
     {
@@ -474,7 +378,7 @@ class lenandoHelper
             {
                 if($categoryDetails->lang == $lang)
                 {
-                    return $categoryDetails->name;
+                    return (string)$categoryDetails->name;
                 }
             }
         }
@@ -482,19 +386,22 @@ class lenandoHelper
     }
 	/**
 	 * Get category branch marketplace for a custom branch id.
-	 * @param  int $categoryhId
+	 * @param  int $categoryId
 	 * @param  int $plentyId
 	 * @param  int $marketplaceId
-	 * @param  string $marketplaceSubId
+	 * @param  float $marketplaceSubId
 	 * @return string
 	 */
-	public function getCategoryMarketplace(int $categoryhId, int $plentyId, int $marketplaceId, float $marketplaceSubId = 0.0):string
+	public function getCategoryMarketplace(int $categoryId, int $plentyId, int $marketplaceId, float $marketplaceSubId = 0.0):string
 	{
-        $webstoreId = $this->getWebstoreId($plentyId);
-		$categoryBranchMarketplace = $this->categoryBranchMarketplaceRepository->findCategoryBranchMarketplace($categoryhId, $webstoreId, $marketplaceId, $marketplaceSubId);
-		if($categoryBranchMarketplace instanceof CategoryBranchMarketplace)
+		if($categoryId > 0)
 		{
-			return $categoryBranchMarketplace->plenty_category_branch_marketplace_value1;
+			$webstoreId = $this->getWebstoreId($plentyId);
+			$categoryBranchMarketplace = $this->categoryBranchMarketplaceRepository->findCategoryBranchMarketplace($categoryId, $webstoreId, $marketplaceId, $marketplaceSubId);
+			if($categoryBranchMarketplace instanceof CategoryBranchMarketplace)
+			{
+				return (string)$categoryBranchMarketplace->plenty_category_branch_marketplace_value1;
+			}
 		}
 		return '';
 	}
@@ -505,7 +412,7 @@ class lenandoHelper
      * @param  int|null  $mobId
      * @return float|null
      */
-    public function getShippingCost(Record $item, KeyValue $settings, ?int $mopId = null):?float
+    public function getShippingCost(Record $item, KeyValue $settings, int $mopId = null)
     {
         if($settings->get('shippingCostType') == self::SHIPPING_COST_TYPE_FLAT)
         {
@@ -556,16 +463,16 @@ class lenandoHelper
      * @param int $paymentMethodId
      * @return float|null
      */
-    public function calculateShippingCost(int $itemId, int $shippingDestinationId, float $referrerId, int $paymentMethodId):?float
+    public function calculateShippingCost(int $itemId, int $shippingDestinationId, float $referrerId, int $paymentMethodId)
     {
         return $this->defaultShippingCostRepository->findShippingCost($itemId, $referrerId, $shippingDestinationId, $paymentMethodId);
     }
     /**
      * returns the price of the given variation
      * @param  Record   $item
-     * @return float
+     * @return float|null
      */
-    public function getPrice(Record $item):float
+    public function getPrice(Record $item)
     {
             return $item->variationRetailPrice->price;
     }
@@ -579,9 +486,9 @@ class lenandoHelper
     {
         if($settings->get('transferRrp') == self::TRANSFER_RRP_YES)
         {
-            return $item->variationRecommendedRetailPrice->price;
+            return (float)$item->variationRecommendedRetailPrice->price;
         }
-        return 0.0;
+        return 0.00;
     }
     /**
      * returns the specialOfferPrice of the given variation if transferOfferPrice is set
@@ -593,9 +500,9 @@ class lenandoHelper
     {
         if($settings->get('transferOfferPrice') == self::TRANSFER_OFFER_PRICE_YES)
         {
-            return $item->variationSpecialOfferRetailPrice->retailPrice;
+            return (float)$item->variationSpecialOfferRetailPrice->retailPrice;
         }
-        return 0.0;
+        return 0.00;
     }
     /**
      * Get the attributeNames
@@ -607,14 +514,14 @@ class lenandoHelper
     public function getAttributeName(Record $item, KeyValue $settings, string $delimiter = '|'):string
     {
         $values = [];
-        if($item->variationBase->attributeValueSetId)
+        if(!is_null($item->variationBase->attributeValueSetId))
         {
             foreach($item->variationAttributeValueList as $attribute)
             {
-                $attributeName = $this->attributeNameRepository->findOne($attribute->attributeId, $settings->get('lang') ? $settings->get('lang') : 'de');
-                if($attributeName instanceof AttributeName)
+                $attributeName = $this->marketAttributeHelperRepository->getAttributeName($attribute->attributeId, $settings->get('lang') ? $settings->get('lang') : 'de');
+                if(strlen($attributeName) > 0)
                 {
-                    $values[] = $attributeName->name;
+                    $values[] = $attributeName;
                 }
             }
         }
@@ -625,10 +532,10 @@ class lenandoHelper
      * @param  Record   $item
      * @param  KeyValue $settings
      * @param  string $delimiter
-     * @param  array<int, int> $attributeNameCombination | null
+     * @param  array $attributeNameCombination
      * @return string
      */
-    public function getAttributeValueSetShortFrontendName(Record $item, KeyValue $settings, string $delimiter = ', ', ?array<int, int>$attributeNameCombination = null):string
+    public function getAttributeValueSetShortFrontendName(Record $item, KeyValue $settings, string $delimiter = ', ', array $attributeNameCombination = null):string
     {
         $values = [];
         $unsortedValues = [];
@@ -637,10 +544,10 @@ class lenandoHelper
             $i = 0;
             foreach($item->variationAttributeValueList as $attribute)
             {
-                $attributeValueName = $this->attributeValueNameRepository->findOne($attribute->attributeValueId, $settings->get('lang') ? $settings->get('lang') : 'de');
-                if($attributeValueName instanceof AttributeValueName)
+                $attributeValueName = $this->marketAttributeHelperRepository->getAttributeValueName($attribute->attributeId, $attribute->attributeValueId, $settings->get('lang') ? $settings->get('lang') : 'de');
+                if(strlen($attributeValueName) > 0)
                 {
-                    $unsortedValues[$attribute->attributeId] = $attributeValueName->name;
+                    $unsortedValues[$attribute->attributeId] = $attributeValueName;
                     $i++;
                 }
             }
@@ -701,12 +608,12 @@ class lenandoHelper
      * Get base price.
      * @param  Record   $item
      * @param  KeyValue $settings
-     * @param  string   $separator         =             '/'
-     * @param  bool     $compact           =             false
-     * @param  bool     $dotPrice          =             false
-     * @param  string   $currency          =             ''
-     * @param  float    $price             =             0.0
-     * @param  bool     $onlyBasePrice     =             false
+     * @param  string   $separator	= '/'
+     * @param  bool     $compact    = false
+     * @param  bool     $dotPrice   = false
+     * @param  string   $currency   = ''
+     * @param  float    $price      = 0.0
+     * @param  bool     $addUnit    = true
      * @return string
      */
     public function getBasePrice(
@@ -768,9 +675,9 @@ class lenandoHelper
 	 *
 	 * @param  Record   $item
 	 * @param  KeyValue $settings
-	 * @return Map
+	 * @return array
 	 */
-	public function getBasePriceList(Record $item, KeyValue $settings):Map<string,mixed>
+	public function getBasePriceList(Record $item, KeyValue $settings):array
 	{
 		$price = (float)$item->variationRetailPrice->price;
 		$lot = (int)$item->variationBase->content;
@@ -787,32 +694,17 @@ class lenandoHelper
 		}
 		$basePriceDetails = $this->getBasePriceDetails($lot, $price, $unitShortcut);
 		$basePriceDetails['price'] = number_format($basePriceDetails['price'], 2, '.', '');
-        return Map{'lot' => (int)$basePriceDetails['lot'], 'price' => (float)$basePriceDetails['price'], 'unit' => (string)$unitName};
+        return [
+        	'lot' => (int)$basePriceDetails['lot'],
+			'price' => (float)$basePriceDetails['price'],
+			'unit' => (string)$unitName
+		];
 	}
-    /**
-     * Get base price unit as short cut.
-     *
-     * @param  Record   $item
-     * @param  KeyValue $settings
-     * @return string
-     */
-    public function getBasePriceDetailUnit(Record $item, KeyValue $settings):string
-    {
-        $unitLang = $this->unitNameRepository->findByUnitId((int) $item->variationBase->unitId);
-		if($unitLang instanceof UnitName)
-		{
-            $unitShortcut = $unitLang->unit->unitOfMeasurement;
-		}
-		else
-		{
-            $unitShortcut = '';
-		}
-        return $unitShortcut;
-    }
     /**
      * Get main image.
      * @param  Record   $item
      * @param  KeyValue $settings
+	 * @param  string 	$imageType
      * @return string
      */
     public function getMainImage(Record $item, KeyValue $settings, string $imageType = 'normal'):string
@@ -821,11 +713,11 @@ class lenandoHelper
         {
             if($settings->get('imagePosition') == self::IMAGE_FIRST)
             {
-                return $this->urlBuilderRepository->getImageUrl($image->path, $settings->get('plentyId'), $imageType, $image->fileType, $image->type == 'external');
+                return (string)$this->urlBuilderRepository->getImageUrl($image->path, $settings->get('plentyId'), $imageType, $image->fileType, $image->type == 'external');
             }
             elseif($settings->get('imagePosition')== self::IMAGE_POSITION0 && $image->position == 0)
             {
-                return $this->urlBuilderRepository->getImageUrl($image->path, $settings->get('plentyId'), $imageType, $image->fileType, $image->type == 'external');
+                return (string)$this->urlBuilderRepository->getImageUrl($image->path, $settings->get('plentyId'), $imageType, $image->fileType, $image->type == 'external');
             }
         }
         return '';
@@ -835,9 +727,9 @@ class lenandoHelper
      * @param Record $item
      * @param KeyValue $settings
      * @param string $imageType = 'normal'
-     * @return array<mixed>
+     * @return array
      */
-    public function getImageList(Record $item, KeyValue $settings, string $imageType = 'normal'):array<string>
+    public function getImageList(Record $item, KeyValue $settings, string $imageType = 'normal'):array
     {
         $list = [];
         foreach($item->variationImageList as $image)
@@ -846,6 +738,31 @@ class lenandoHelper
         }
         return $list;
     }
+	/**
+	 * Get item characters that match referrer from settings and a given component id.
+	 * @param  Record   $item
+	 * @param  float    $marketId
+	 * @param  string  $externalComponent
+	 * @return string
+	 */
+	public function getItemPropertyByExternalComponent(Record $item, float $marketId, $externalComponent):string
+	{
+		$marketProperties = $this->marketPropertyHelperRepository->getMarketProperty($marketId);
+		foreach($item->itemPropertyList as $property)
+		{
+			foreach($marketProperties as $marketProperty)
+			{
+				if(is_array($marketProperty) && count($marketProperty) > 0 && $marketProperty['character_item_id'] == $property->propertyId)
+				{
+					if (strlen($externalComponent) > 0 && $marketProperty['external_component'] == $externalComponent)
+					{
+						return $property->propertyValue;
+					}
+				}
+			}
+		}
+		return '';
+	}
     /**
      * Get item character value by backend name.
      * @param  Record $item
@@ -865,46 +782,49 @@ class lenandoHelper
         }
         return '';
     }
-    /**
-     * Get item characters that match referrer from settings and a given component id.
-     * @param  Record   $item
-     * @param  float      $marketId
-     * @param  ?int     $componentId  = null
-     * @return array<int, mixed>
-     */
-    public function getItemCharactersByComponent(Record $item, float $marketId, ?int $componentId = null):Vector<array<string,mixed>>
-    {
-        $propertyList = $item->itemPropertyList;
-        $propertyMarketComponents = $this->propertyMarketComponentRepository->getPropertyMarketComponents($marketId, !is_null($componentId) ? $componentId : null);
-        $list = Vector{};
-        foreach($propertyList as $property)
+	/**
+	 * Get item characters that match referrer from settings and a given component id.
+	 * @param  Record   $item
+	 * @param  float    $marketId
+	 * @param  int     $componentId  = null
+	 * @return array
+	 */
+	public function getItemCharactersByComponent(Record $item, float $marketId, int $componentId = null):array
+	{
+		$marketProperties = $this->marketPropertyHelperRepository->getMarketProperty($marketId);
+		$list = array();
+		foreach($item->itemPropertyList as $property)
 		{
-            foreach($propertyMarketComponents as $propertyMarketComponent)
-            {
-                if($propertyMarketComponent instanceof PropertyMarketComponent && $propertyMarketComponent->propertyItemId == $property->propertyId)
-                {
-                    $list[] = [
-                        'itemCharacterId' => $property->itemPropertyId,
-                        'characterId' => $property->propertyId,
-                        'characterValue' => $property->propertyValue,
-                        'characterValueType' => $property->propertyValueType,
-                        'characterItemId' => $propertyMarketComponent->propertyItemId,
-                        'componentId' => $propertyMarketComponent->componentId,
-                        'referrerId' => $propertyMarketComponent->marketReference,
-                        'externalComponent' => $propertyMarketComponent->externalComponent,
+			foreach($marketProperties as $marketProperty)
+			{
+				if(is_array($marketProperty) && count($marketProperty) > 0 && $marketProperty['character_item_id'] == $property->propertyId)
+				{
+					if (!is_null($componentId) && $marketProperty['component_id'] != $componentId)
+					{
+						continue;
+					}
+					$list[] = [
+						'itemCharacterId' 	 => $property->itemPropertyId,
+						'characterId' 		 => $property->propertyId,
+						'characterValue' 	 => $property->propertyValue,
+						'characterValueType' => $property->propertyValueType,
+						'characterItemId' 	 => $marketProperty['character_item_id'],
+						'componentId' 		 => $marketProperty['component_id'],
+						'referrerId' 		 => $marketId,
+						'externalComponent'  => $marketProperty['external_component'],
 					];
-                }
-            }
+				}
+			}
 		}
 		return $list;
-    }
+	}
     /**
      * Get barcode by a given type.
      * @param  Record   $item
      * @param  string   $barcodeType
      * @return string
      */
-    public function getBarcodeByType(Record $item,string $barcodeType):string
+    public function getBarcodeByType(Record $item, string $barcodeType):string
     {
         foreach($item->variationBarcodeList as $variationBarcode)
         {
@@ -920,9 +840,9 @@ class lenandoHelper
      * @param  int    $lot
      * @param  float  $price
      * @param  string $unit
-     * @return Map
+     * @return array
      */
-    public function getBasePriceDetails(int $lot, float $price, string $unit):Map<string,mixed>
+    public function getBasePriceDetails(int $lot, float $price, string $unit):array
     {
         $lot = $lot == 0 ? 1 : $lot; // TODO  PlentyStringUtils::numberFormatLot($lot, true);
 		$basePrice = 0;
@@ -952,7 +872,11 @@ class lenandoHelper
 			$basePriceLot = 1;
 		}
 		$endLot = ($basePriceLot/$lot);
-		return Map{'lot' => (int) $basePriceLot, 'price' => (float) $price * $factor * $endLot, 'unit' => (string) $basePriceUnit};
+		return [
+			'lot' => (int) $basePriceLot,
+			'price' => (float) $price * $factor * $endLot,
+			'unit' => (string) $basePriceUnit
+		];
     }
     /**
      * Get default currency from configuration.
@@ -960,7 +884,9 @@ class lenandoHelper
      */
     public function getDefaultCurrency():string
     {
-        $config = []; // TODO load config
+        $config = [];
+		// TODO load config
+//		$config = $this->getConfig('cfgCurrency');
         if(is_array($config) && is_string($config['cfgCurrency']))
         {
             return $config['cfgCurrency'];
@@ -970,12 +896,12 @@ class lenandoHelper
     /**
      * Get list of payment methods.
      * @param KeyValue $settings
-     * @return Map<int,PaymentMethod>
+     * @return array
      */
-    public function getPaymentMethods(KeyValue $settings):Map<int,PaymentMethod>
+    public function getPaymentMethods(KeyValue $settings):array
     {
         $paymentMethods = $this->paymentMethodRepository->getPaymentMethods($settings->get('destination'), $settings->get('plentyId'), $settings->get('lang'));
-        $list = Map{};
+        $list = array();
         foreach($paymentMethods as $paymentMethod)
         {
             $list[$paymentMethod->id] = $paymentMethod;
@@ -987,7 +913,7 @@ class lenandoHelper
 	 * @param  KeyValue $settings
 	 * @return DefaultShipping|null
 	 */
-	public function getDefaultShipping(KeyValue $settings):?DefaultShipping
+	public function getDefaultShipping(KeyValue $settings):DefaultShipping
 	{
         $defaultShippingProfiles = $this->getConfig('plenty.order.shipping.default_shipping');
         foreach($defaultShippingProfiles as $defaultShippingProfile)
@@ -1002,10 +928,10 @@ class lenandoHelper
     /**
      * Get custom configuration.
      * @param  string $key
-     * @param  mixed $default = null
-     * @return T
+     * @param  mixed  $default = null
+     * @return array
      */
-    public function getConfig<T>(string $key, mixed $default = null):T
+    public function getConfig(string $key, $default = null)
     {
         return $this->configRepository->get($key, $default);
     }
@@ -1029,25 +955,36 @@ class lenandoHelper
         if($webstore instanceof Webstore)
         {
             $webstoreId = $webstore->id;
-            return $webstoreId;
+			if(!is_null($webstoreId))
+			{
+				return $webstoreId;
+			}
         }
         return 0;
     }
     /**
-     * @param Record $item
-     * @param float $marketId
+     * @param Record 	  $item
+     * @param float 	  $marketId
      * @param null|string $sku
-     * @param int $accountId
-     * @param bool $setLastExportedTimestamp
-     * return string
+     * @param int 		  $accountId
+     * @param bool 		  $setLastExportedTimestamp
+     * @return string
      */
-    public function generateSku(Record $item, float $marketId, ?string $sku = null, int $accountId = 0, bool $setLastExportedTimestamp = true):string
+    public function generateSku(Record $item,
+								float $marketId,
+								string $sku = null,
+								int $accountId = 0,
+								bool $setLastExportedTimestamp = true
+	):string
     {
-        $sku = $this->variationSkuRepository
-            ->generateSku($item->variationBase->id, $marketId, $accountId, $sku, $setLastExportedTimestamp);
-        return $sku;
+		return $this->marketItemHelperRepository->generateSku(
+			$item->variationBase->id,
+			$marketId,
+			$accountId,
+			$setLastExportedTimestamp
+		);
     }
-    /**
+	/**
 	 * Selects the external manufacturer name by id.
 	 *
 	 * @param int $manufacturerId
@@ -1057,18 +994,7 @@ class lenandoHelper
 	{
 		if($manufacturerId > 0)
 		{
-			$manufacturer = $this->manufacturerRepository->findById($manufacturerId);
-			if($manufacturer instanceof Manufacturer)
-			{
-				if(strlen($manufacturer->externalName))
-				{
-					return $manufacturer->externalName;
-				}
-				elseif(strlen($manufacturer->name))
-				{
-					return $manufacturer->name;
-				}
-			}
+			return $this->marketItemHelperRepository->getExternalManufacturerName($manufacturerId);
 		}
 		return '';
 	}
