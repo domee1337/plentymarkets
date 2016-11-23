@@ -211,7 +211,7 @@ class lenandoDE extends CSVGenerator
 				 * gets the attribute value name of each attribute value which is linked with the variation in a specific order,
 				 * which depends on the $attributeNameCombination
 				 */
-				$attributeValue = $this->lenandoHelper->getAttributeValueSetShortFrontendName($variation, $settings, '|', $this->attributeNameCombination[$variation->itemBase->id]);
+				$attributeValue = $this->lenandoHelper->getAttributeValueSetShortFrontendName($variation, $settings, ' ', $this->attributeNameCombination[$variation->itemBase->id]);
 				if(count($variations) == 1)
 				{
 					$this->buildParentWithoutChildrenRow($variation, $settings);
