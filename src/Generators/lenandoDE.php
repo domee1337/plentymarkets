@@ -142,6 +142,10 @@ class lenandoDE extends CSVGenerator
 				'Mindestabnahme',
 				'Maximalabnahme',
 				'Abnahmestaffelung',
+				'Energieefiizienz',
+				'Energieefiizienzbild',
+				'UVP',
+				'EVP',
 			]);
 			$currentItemId = null;
 			$previousItemId = null;
@@ -309,6 +313,17 @@ class lenandoDE extends CSVGenerator
 			$reducedPrice = $variationSpecialPrice;
 			$referenceReducedPrice = 'VK';
 		}
+		
+		$uvp = '';
+		if($referenceReducedPrice == 'UVP'){
+			$uvp = $reducedPrice;
+		}
+		$evp = '';
+		if($referenceReducedPrice == 'VK'){
+			$evp = $reducedPrice;
+		}
+		
+		
 		$unit = $this->getUnit($item);
 		$basePriceContent = (float)$item->variationBase->content;
 		$data = [
@@ -364,6 +379,10 @@ class lenandoDE extends CSVGenerator
 			'Mindestabnahme'		=> '',
 			'Maximalabnahme'		=> '',
 			'Abnahmestaffelung'		=> '',
+			'Energieefiizienz'		=> $this->getItemPropertyByExternalComponent($item, 106.00, self::PROPERTY_TYPE_ENERGY_CLASS),
+			'Energieefiizienzbild'		=> '',
+			'UVP'				=> $uvp,
+			'EVP'				=> $uvp,
 		];
 		$this->addCSVContent(array_values($data));
 	}
@@ -414,6 +433,16 @@ class lenandoDE extends CSVGenerator
 			$reducedPrice = $variationSpecialPrice;
 			$referenceReducedPrice = 'VK';
 		}
+		
+		$uvp = '';
+		if($referenceReducedPrice == 'UVP'){
+			$uvp = $reducedPrice;
+		}
+		$evp = '';
+		if($referenceReducedPrice == 'VK'){
+			$evp = $reducedPrice;
+		}
+		
 		$unit = $this->getUnit($item);
 		$basePriceContent = (float)$item->variationBase->content;
 		
@@ -470,6 +499,10 @@ class lenandoDE extends CSVGenerator
 			'Mindestabnahme'		=> '',
 			'Maximalabnahme'		=> '',
 			'Abnahmestaffelung'		=> '',
+			'Energieefiizienz'		=> '',
+			'Energieefiizienzbild'		=> '',
+			'UVP'				=> $uvp,
+			'EVP'				=> $evp,
 		];
 		$this->addCSVContent(array_values($data));
 	}
@@ -543,6 +576,15 @@ class lenandoDE extends CSVGenerator
 			$reducedPrice = $variationSpecialPrice;
 			$referenceReducedPrice = 'VK';
 		}
+		
+		$uvp = '';
+		if($referenceReducedPrice == 'UVP'){
+			$uvp = $reducedPrice;
+		}
+		$evp = '';
+		if($referenceReducedPrice == 'VK'){
+			$evp = $reducedPrice;
+		}
 		$unit = $this->getUnit($item);
 		$basePriceContent = (float)$item->variationBase->content;
 		$data = [
@@ -598,6 +640,10 @@ class lenandoDE extends CSVGenerator
 			'Mindestabnahme'		=> '',
 			'Maximalabnahme'		=> '',
 			'Abnahmestaffelung'		=> '',
+			'Energieefiizienz'		=> '',
+			'Energieefiizienzbild'		=> '',
+			'UVP'				=> $uvp,
+			'EVP'				=> $evp,
 		];
 		$this->addCSVContent(array_values($data));
 	}
