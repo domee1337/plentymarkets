@@ -521,7 +521,13 @@ class lenandoHelper
                 $attributeName = $this->marketAttributeHelperRepository->getAttributeName($attribute->attributeId, $settings->get('lang') ? $settings->get('lang') : 'de');
                 if(strlen($attributeName) > 0)
                 {
-                    $values[] = $attributeName;
+                    $values[] .= $attributeName. ': ';
+                }
+		    
+		$attributeValueName = $this->marketAttributeHelperRepository->getAttributeValueName($attribute->attributeId, $settings->get('lang') ? $settings->get('lang') : 'de');
+                if(strlen($attributeValueName) > 0)
+                {
+                    $values[] .= $attributeValueName. ' ';
                 }
             }
         }
