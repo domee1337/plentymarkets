@@ -1,21 +1,18 @@
-<?php // strict
+<?php
 namespace lenando;
-
 use Plenty\Modules\DataExchange\Services\ExportPresetContainer;
 use Plenty\Plugin\DataExchangeServiceProvider;
-
 class lenandoServiceProvider extends DataExchangeServiceProvider
 {
-	public function register():void
+	public function register()
 	{
 	}
-
-	public function exports(ExportPresetContainer $container):void
+	public function exports(ExportPresetContainer $container)
 	{
 		$formats = [
-			'lenandoDE',   
+			'lenandoDE',
+			          
 		];
-
 		foreach ($formats as $format)
 		{
 			$container->add(
