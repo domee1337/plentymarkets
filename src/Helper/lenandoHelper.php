@@ -519,15 +519,16 @@ class lenandoHelper
             foreach($item->variationAttributeValueList as $attribute)
             {
                 $attributeName = $this->marketAttributeHelperRepository->getAttributeName($attribute->attributeId, $settings->get('lang') ? $settings->get('lang') : 'de');
-                if(strlen($attributeName) > 0)
+                
+		if(strlen($attributeName) > 0)
                 {
-                    $values[] .= $attributeName. ': ';
+                    $values .= $attributeName. ': ';
                 }
 		    
-		$attributeValueName = $this->marketAttributeHelperRepository->getAttributeValueName($attribute->attributeId, $settings->get('lang') ? $settings->get('lang') : 'de');
+		$attributeValueName = $this->marketAttributeHelperRepository->getAttributeValueName($attribute->attributeId, $attribute->attributeValueId, $settings->get('lang') ? $settings->get('lang') : 'de');
                 if(strlen($attributeValueName) > 0)
                 {
-                    $values[] .= $attributeValueName. ' ';
+                    $values .= $attributeValueName. ' ';
                 }
             }
         }
