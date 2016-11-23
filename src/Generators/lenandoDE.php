@@ -587,7 +587,7 @@ class lenandoDE extends CSVGenerator
 			'Freifeld9'			=> $item->itemBase->free9,
 			'Freifeld10'			=> $item->itemBase->free10,
 			'baseid'			=> $item->itemBase->id,
-			'basename'			=> $this->lenandoHelper->getAttributeName($item, $settings),
+			'basename'			=> $attributeValue, //$this->lenandoHelper->getAttributeName($item, $settings)
 			'level'				=> '0',
 			'status'			=> $variationAvailable,
 			'external_categories'		=> '1', //$item->variationStandardCategory->categoryId,
