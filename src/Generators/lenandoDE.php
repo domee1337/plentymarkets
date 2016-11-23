@@ -316,11 +316,11 @@ class lenandoDE extends CSVGenerator
 		
 		$uvp = '';
 		if($referenceReducedPrice == 'UVP'){
-			$uvp = $reducedPrice;
+			$uvp = number_format((float)$reducedPrice, 2, '.', '');
 		}
 		$evp = '';
 		if($referenceReducedPrice == 'VK'){
-			$evp = $reducedPrice;
+			$evp = number_format((float)$reducedPrice, 2, '.', '');
 		}
 		
 		
@@ -330,7 +330,7 @@ class lenandoDE extends CSVGenerator
 			'Produktname'			=> $this->lenandoHelper->getName($item, $settings, 150),
 			'Artikelnummer'			=> $item->itemBase->id,
 			'ean'				=> $this->lenandoHelper->getBarcodeByType($item, $settings->get('barcode')),
-			'Hersteller'			=> $item->itemBase->producer,
+			'Hersteller'			=> $this->lenandoHelper->getExternalManufacturerName($item->itemBase->producerId),
 			'Steuersatz'			=> $item->variationRetailPrice->vatValue,
 			'Preis'				=> number_format($price, 2, '.', ''),
 			'Kurzbeschreibung'		=> '',
@@ -436,11 +436,11 @@ class lenandoDE extends CSVGenerator
 		
 		$uvp = '';
 		if($referenceReducedPrice == 'UVP'){
-			$uvp = $reducedPrice;
+			$uvp = number_format((float)$reducedPrice, 2, '.', '');
 		}
 		$evp = '';
 		if($referenceReducedPrice == 'VK'){
-			$evp = $reducedPrice;
+			$evp = number_format((float)$reducedPrice, 2, '.', '');
 		}
 		
 		$unit = $this->getUnit($item);
@@ -450,7 +450,7 @@ class lenandoDE extends CSVGenerator
 			'Produktname'			=> $this->lenandoHelper->getName($item, $settings, 150),
 			'Artikelnummer'			=> $item->itemBase->id,
 			'ean'				=> $this->lenandoHelper->getBarcodeByType($item, $settings->get('barcode')),
-			'Hersteller'			=> $item->itemBase->producer,
+			'Hersteller'			=> $this->lenandoHelper->getExternalManufacturerName($item->itemBase->producerId),
 			'Steuersatz'			=> $item->variationRetailPrice->vatValue,
 			'Preis'				=> number_format($price, 2, '.', ''),
 			'Kurzbeschreibung'		=> '',
@@ -579,11 +579,11 @@ class lenandoDE extends CSVGenerator
 		
 		$uvp = '';
 		if($referenceReducedPrice == 'UVP'){
-			$uvp = $reducedPrice;
+			$uvp = number_format((float)$reducedPrice, 2, '.', '');
 		}
 		$evp = '';
 		if($referenceReducedPrice == 'VK'){
-			$evp = $reducedPrice;
+			$evp = number_format((float)$reducedPrice, 2, '.', '');
 		}
 		$unit = $this->getUnit($item);
 		$basePriceContent = (float)$item->variationBase->content;
@@ -591,7 +591,7 @@ class lenandoDE extends CSVGenerator
 			'Produktname'			=> $this->lenandoHelper->getName($item, $settings, 150),
 			'Artikelnummer'			=> $item->itemBase->id,
 			'ean'				=> $this->lenandoHelper->getBarcodeByType($item, $settings->get('barcode')),
-			'Hersteller'			=> $item->itemBase->producer,
+			'Hersteller'			=> $this->lenandoHelper->getExternalManufacturerName($item->itemBase->producerId),
 			'Steuersatz'			=> $item->variationRetailPrice->vatValue,
 			'Preis'				=> number_format($price, 2, '.', ''),
 			'Kurzbeschreibung'		=> '',
