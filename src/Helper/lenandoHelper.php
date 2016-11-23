@@ -511,9 +511,9 @@ class lenandoHelper
      * @param string    $delimiter
      * @return string
      */
-    public function getAttributeName(Record $item, KeyValue $settings, string $delimiter = '|'):string
+    public function getAttributeName(Record $item, KeyValue $settings):string
     {
-        $values = [];
+        $values = '';
         if(!is_null($item->variationBase->attributeValueSetId))
         {
             foreach($item->variationAttributeValueList as $attribute)
@@ -532,7 +532,7 @@ class lenandoHelper
                 }
             }
         }
-        return implode($delimiter, $values);
+        return $values;
     }
     /**
      * Get the attribute value set short frontend name. Ex. blue, XL
