@@ -511,28 +511,21 @@ class lenandoHelper
      * @param string    $delimiter
      * @return string
      */
-    public function getAttributeName(Record $item, KeyValue $settings):string
+    public function getAttributeName(Record $item, KeyValue $settings, string $delimiter = '|'):string
     {
-        $values = '';
+        $values = [];
         if(!is_null($item->variationBase->attributeValueSetId))
         {
             foreach($item->variationAttributeValueList as $attribute)
             {
                 $attributeName = $this->marketAttributeHelperRepository->getAttributeName($attribute->attributeId, $settings->get('lang') ? $settings->get('lang') : 'de');
-                
-		if(strlen($attributeName) > 0)
+                if(strlen($attributeName) > 0)
                 {
-                    $values .= $attributeName. ': ';
-                }
-		    
-		$attributeValueName = $this->marketAttributeHelperRepository->getAttributeValueName($attribute->attributeId, $settings->get('lang') ? $settings->get('lang') : 'de');
-                if(strlen($attributeValueName) > 0)
-                {
-                    $values .= $attributeValueName. ' ';
+                    $values[] = $attributeName;
                 }
             }
         }
-        return $values;
+        return implode($delimiter, $values);
     }
     /**
      * Get the attribute value set short frontend name. Ex. blue, XL
