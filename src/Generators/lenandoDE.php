@@ -291,33 +291,7 @@ class lenandoDE extends CSVGenerator
 			$stock = 0;
 		}
 		
-		
-		$variationPrice = $this->lenandoHelper->getPrice($item);
-		$variationRrp = $this->lenandoHelper->getRecommendedRetailPrice($item, $settings);
-		$variationSpecialPrice = $this->lenandoHelper->getSpecialPrice($item, $settings);
-		$price = $variationPrice;
-		$reducedPrice = '';
-		$uvp = '';
-		$evp = '';
-		$referenceReducedPrice = '';
-		if ($variationRrp > 0 && $variationRrp > $variationPrice)
-		{
-			
-			$referenceReducedPrice = 'UVP';
-			$reducedPrice = $variationPrice;
-		}
-		if ($variationSpecialPrice > 0 && $variationPrice > $variationSpecialPrice && $referenceReducedPrice == 'UVP')
-		{
-			$uvp = $variationSpecialPrice;
-		}
-		else if ($variationSpecialPrice > 0 && $variationPrice > $variationSpecialPrice)
-		{
-			$evp = $variationSpecialPrice;
-		}
-		
-		
-		
-		
+
 		$unit = $this->getUnit($item);
 		$basePriceContent = (float)$item->variationBase->content;
 		$data = [
@@ -375,8 +349,8 @@ class lenandoDE extends CSVGenerator
 			'Abnahmestaffelung'		=> '',
 			'Energieefiizienz'		=> $this->getItemPropertyByExternalComponent($item, 106.00, self::PROPERTY_TYPE_ENERGY_CLASS),
 			'Energieefiizienzbild'		=> '',
-			'UVP'				=> $uvp,
-			'EVP'				=> $uvp,
+			'UVP'				=> number_format($this->lenandoHelper->getRecommendedRetailPrice($item, $settings);
+			'EVP'				=> number_format($this->lenandoHelper->getSpecialPrice($item, $settings), 2, '.', ''),
 		];
 		$this->addCSVContent(array_values($data));
 	}
@@ -406,28 +380,7 @@ class lenandoDE extends CSVGenerator
             $inventoryManagementActive = 1;
         }
 	
-		$variationPrice = $this->lenandoHelper->getPrice($item);
-		$variationRrp = $this->lenandoHelper->getRecommendedRetailPrice($item, $settings);
-		$variationSpecialPrice = $this->lenandoHelper->getSpecialPrice($item, $settings);
-		$price = $variationPrice;
-		$reducedPrice = '';
-		$uvp = '';
-		$evp = '';
-		$referenceReducedPrice = '';
-		if ($variationRrp > 0 && $variationRrp > $variationPrice)
-		{
-			
-			$referenceReducedPrice = 'UVP';
-			$reducedPrice = $variationPrice;
-		}
-		if ($variationSpecialPrice > 0 && $variationPrice > $variationSpecialPrice && $referenceReducedPrice == 'UVP')
-		{
-			$uvp = $variationSpecialPrice;
-		}
-		else if ($variationSpecialPrice > 0 && $variationPrice > $variationSpecialPrice)
-		{
-			$evp = $variationSpecialPrice;
-		}
+		
 		
 		$unit = $this->getUnit($item);
 		$basePriceContent = (float)$item->variationBase->content;
@@ -487,8 +440,8 @@ class lenandoDE extends CSVGenerator
 			'Abnahmestaffelung'		=> '',
 			'Energieefiizienz'		=> $this->getItemPropertyByExternalComponent($item, 106.00, self::PROPERTY_TYPE_ENERGY_CLASS),
 			'Energieefiizienzbild'		=> '',
-			'UVP'				=> $uvp,
-			'EVP'				=> $evp,
+			'UVP'				=> number_format($this->lenandoHelper->getRecommendedRetailPrice($item, $settings);
+			'EVP'				=> number_format($this->lenandoHelper->getSpecialPrice($item, $settings), 2, '.', ''),
 		];
 		$this->addCSVContent(array_values($data));
 	}
@@ -541,28 +494,8 @@ class lenandoDE extends CSVGenerator
 			$variationAvailable = 0;
 			$stock = 0;
 		}
-		$variationPrice = $this->lenandoHelper->getPrice($item);
-		$variationRrp = $this->lenandoHelper->getRecommendedRetailPrice($item, $settings);
-		$variationSpecialPrice = $this->lenandoHelper->getSpecialPrice($item, $settings);
-		$price = $variationPrice;
-		$reducedPrice = '';
-		$uvp = '';
-		$evp = '';
-		$referenceReducedPrice = '';
-		if ($variationRrp > 0 && $variationRrp > $variationPrice)
-		{
-			
-			$referenceReducedPrice = 'UVP';
-			$reducedPrice = $variationPrice;
-		}
-		if ($variationSpecialPrice > 0 && $variationPrice > $variationSpecialPrice && $referenceReducedPrice == 'UVP')
-		{
-			$uvp = $variationSpecialPrice;
-		}
-		else if ($variationSpecialPrice > 0 && $variationPrice > $variationSpecialPrice)
-		{
-			$evp = $variationSpecialPrice;
-		}
+		
+		
 		
 		$unit = $this->getUnit($item);
 		$basePriceContent = (float)$item->variationBase->content;
@@ -621,8 +554,8 @@ class lenandoDE extends CSVGenerator
 			'Abnahmestaffelung'		=> '',
 			'Energieefiizienz'		=> $this->getItemPropertyByExternalComponent($item, 106.00, self::PROPERTY_TYPE_ENERGY_CLASS),
 			'Energieefiizienzbild'		=> '',
-			'UVP'				=> $uvp,
-			'EVP'				=> $evp,
+			'UVP'				=> number_format($this->lenandoHelper->getRecommendedRetailPrice($item, $settings);
+			'EVP'				=> number_format($this->lenandoHelper->getSpecialPrice($item, $settings), 2, '.', ''),
 		];
 		$this->addCSVContent(array_values($data));
 	}
