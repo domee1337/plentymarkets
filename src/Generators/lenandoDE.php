@@ -87,7 +87,9 @@ class lenandoDE extends CSVGenerator
 		$this->addCSVContent(array_values($data));
 			
 			//Kategorien
-			
+			$this->addCSVContent([
+				'',
+			]);
 			
 			$this->addCSVContent([
 				'Produktname',
