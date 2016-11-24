@@ -349,7 +349,7 @@ class lenandoDE extends CSVGenerator
 			'Abnahmestaffelung'		=> '',
 			'Energieefiizienz'		=> $this->getItemPropertyByExternalComponent($item, 106.00, self::PROPERTY_TYPE_ENERGY_CLASS),
 			'Energieefiizienzbild'		=> '',
-			'UVP'				=> number_format($this->lenandoHelper->getRecommendedRetailPrice($item, $settings);
+			'UVP'				=> number_format($this->lenandoHelper->getRecommendedRetailPrice($item, $settings),
 			'EVP'				=> number_format($this->lenandoHelper->getSpecialPrice($item, $settings), 2, '.', ''),
 		];
 		$this->addCSVContent(array_values($data));
@@ -440,7 +440,7 @@ class lenandoDE extends CSVGenerator
 			'Abnahmestaffelung'		=> '',
 			'Energieefiizienz'		=> $this->getItemPropertyByExternalComponent($item, 106.00, self::PROPERTY_TYPE_ENERGY_CLASS),
 			'Energieefiizienzbild'		=> '',
-			'UVP'				=> number_format($this->lenandoHelper->getRecommendedRetailPrice($item, $settings);
+			'UVP'				=> number_format($this->lenandoHelper->getRecommendedRetailPrice($item, $settings),
 			'EVP'				=> number_format($this->lenandoHelper->getSpecialPrice($item, $settings), 2, '.', ''),
 		];
 		$this->addCSVContent(array_values($data));
@@ -554,7 +554,7 @@ class lenandoDE extends CSVGenerator
 			'Abnahmestaffelung'		=> '',
 			'Energieefiizienz'		=> $this->getItemPropertyByExternalComponent($item, 106.00, self::PROPERTY_TYPE_ENERGY_CLASS),
 			'Energieefiizienzbild'		=> '',
-			'UVP'				=> number_format($this->lenandoHelper->getRecommendedRetailPrice($item, $settings);
+			'UVP'				=> number_format($this->lenandoHelper->getRecommendedRetailPrice($item, $settings),
 			'EVP'				=> number_format($this->lenandoHelper->getSpecialPrice($item, $settings), 2, '.', ''),
 		];
 		$this->addCSVContent(array_values($data));
