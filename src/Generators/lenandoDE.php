@@ -415,7 +415,7 @@ class lenandoDE extends CSVGenerator
 			'Eigenschaft1'			=> '',
 			'Familienname2'			=> '',
 			'Eigenschaft2'			=> '',
-			'ID'				=> $item->itemBase->id, //$item->itemBase->id,
+			'ID'				=> 'BASE'.$item->itemBase->id, //$item->itemBase->id,
 			'Inhalt'			=> strlen($unit) > 0 ? $basePriceContent : '',
 			'Einheit'			=> $unit,
 			'Freifeld1'			=> $item->itemBase->free1,
@@ -542,7 +542,7 @@ class lenandoDE extends CSVGenerator
 			'Freifeld8'			=> $item->itemBase->free8,
 			'Freifeld9'			=> $item->itemBase->free9,
 			'Freifeld10'			=> $item->itemBase->free10,
-			'baseid'			=> $item->itemBase->id,
+			'baseid'			=> 'BASE'.$item->itemBase->id,
 			'basename'			=> $attributeValue, //$this->lenandoHelper->getAttributeName($item, $settings)
 			'level'				=> '0',
 			'status'			=> $variationAvailable,
