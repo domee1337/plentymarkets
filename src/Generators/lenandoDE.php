@@ -415,7 +415,7 @@ class lenandoDE extends CSVGenerator
 			'Eigenschaft1'			=> '',
 			'Familienname2'			=> '',
 			'Eigenschaft2'			=> '',
-			'ID'				=> $item->variationBase->id, //$item->itemBase->id,
+			'ID'				=> $item->itemBase->id, //$item->itemBase->id,
 			'Inhalt'			=> strlen($unit) > 0 ? $basePriceContent : '',
 			'Einheit'			=> $unit,
 			'Freifeld1'			=> $item->itemBase->free1,
