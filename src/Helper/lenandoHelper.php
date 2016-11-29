@@ -878,6 +878,55 @@ class lenandoHelper
 			'unit' => (string) $basePriceUnit
 		];
     }
+	
+	
+    /**
+     * getConvertContentTag
+     * is used to check for too high values and to tag the necessity of converting
+     * content and unit to one unit lower
+     * @param float $content
+     * @param int   $maxPreDecimals
+     * @return bool
+     */
+    public function getConvertContentTag(float $content, int $maxPreDecimals):bool
+    {
+        if (strlen(number_format($content))>$maxPreDecimals)
+        {
+            return true;
+        }
+        return false;
+    }
+    /**
+     * @param $content
+     * @param $unit
+     * @return float|int
+     */
+    public function getConvertedBasePriceContent (float $content, string $unit):float
+    {
+        if ($unit == 'ml' || $unit == 'g')
+        {
+            return $content*0.001;
+        }
+        return $content;
+    }
+    /**
+     * @param string $unit
+     * @return string
+     */
+    public function getConvertedBasePriceUnit (string $unit):string
+    {
+        if ($unit == 'ml')
+        {
+            return 'l';
+        }
+        if ($unit == 'g')
+        {
+            return 'kg';
+        }
+        return $unit;
+    }
+	
+	
     /**
      * Get default currency from configuration.
      * @return string
