@@ -8,7 +8,7 @@ use Plenty\Modules\DataExchange\Models\FormatSetting;
 use lenando\Helper\lenandoHelper;
 use Plenty\Modules\Helper\Models\KeyValue;
 use Plenty\Modules\Market\Helper\Contracts\MarketPropertyHelperRepositoryContract;
-class RakutenDE extends CSVGenerator
+class lenandoDE extends CSVGenerator
 {
 	const PROPERTY_TYPE_ENERGY_CLASS       = 'energy_efficiency_class';
 	const PROPERTY_TYPE_ENERGY_CLASS_GROUP = 'energy_efficiency_class_group';
@@ -34,7 +34,7 @@ class RakutenDE extends CSVGenerator
 	 */
 	private $marketPropertyHelperRepository;
 	/**
-	 * Rakuten constructor.
+	 * lenando constructor.
 	 * @param lenandoHelper $lenandoHelper
 	 * @param ArrayHelper $arrayHelper
 	 * @param MarketPropertyHelperRepositoryContract $marketPropertyHelperRepository
@@ -488,7 +488,7 @@ class RakutenDE extends CSVGenerator
 	}
 	/**
 	 * Returns the unit, if there is any unit configured, which is allowed
-	 * for the Rakuten.de API.
+	 * for the lenando.de API.
 	 *
 	 * @param  Record   $item
 	 * @return string
@@ -572,7 +572,7 @@ class RakutenDE extends CSVGenerator
 		return '';
 	}
     /**
-     * Get necessary components to enable Rakuten to calculate a base price for the variation
+     * Get necessary components to enable lenando to calculate a base price for the variation
      * @param Record $item
      * @return array
      */
