@@ -8,7 +8,7 @@ use Plenty\Modules\DataExchange\Models\FormatSetting;
 use lenando\Helper\lenandoHelper;
 use Plenty\Modules\Helper\Models\KeyValue;
 use Plenty\Modules\Market\Helper\Contracts\MarketPropertyHelperRepositoryContract;
-class lenandoDE extends CSVGenerator
+class RakutenDE extends CSVGenerator
 {
 	const PROPERTY_TYPE_ENERGY_CLASS       = 'energy_efficiency_class';
 	const PROPERTY_TYPE_ENERGY_CLASS_GROUP = 'energy_efficiency_class_group';
@@ -34,7 +34,7 @@ class lenandoDE extends CSVGenerator
 	 */
 	private $marketPropertyHelperRepository;
 	/**
-	 * lenando constructor.
+	 * Rakuten constructor.
 	 * @param lenandoHelper $lenandoHelper
 	 * @param ArrayHelper $arrayHelper
 	 * @param MarketPropertyHelperRepositoryContract $marketPropertyHelperRepository
@@ -57,6 +57,7 @@ class lenandoDE extends CSVGenerator
 	{
 		if($resultData instanceof RecordList)
 		{
+			
 			
 			$settings = $this->arrayHelper->buildMapFromObjectList($formatSettings, 'key', 'value');
 			$this->setDelimiter(";");
@@ -91,7 +92,9 @@ class lenandoDE extends CSVGenerator
 				'',
 			]);
 			
-			$this->addCSVContent([
+			
+			
+						$this->addCSVContent([
 				'Produktname',
 				'Artikelnummer',
 				'ean',
@@ -188,6 +191,7 @@ class lenandoDE extends CSVGenerator
 	{
 		if (is_array($variations) && count($variations) > 0)
 		{
+			$primaryVariationKey = null;
 			foreach($variations as $key => $variation)
 			{
 				/**
@@ -205,6 +209,18 @@ class lenandoDE extends CSVGenerator
 						$attributeNameCombination[$variation->itemBase->id][] = $attribute->attributeId;
 					}
 				}
+				// note key of primary variation
+				if($variation->variationBase->primaryVariation === true)
+				{
+					$primaryVariationKey = $key;
+				}
+			}
+			// change sort of array and add primary variation as first entry
+			if(!is_null($primaryVariationKey))
+			{
+				$primaryVariation = $variations[$primaryVariationKey];
+				unset($variations[$primaryVariationKey]);
+				array_unshift($variations, $primaryVariation);
 			}
 			$i = 1;
 			foreach($variations as $key => $variation)
@@ -213,7 +229,7 @@ class lenandoDE extends CSVGenerator
 				 * gets the attribute value name of each attribute value which is linked with the variation in a specific order,
 				 * which depends on the $attributeNameCombination
 				 */
-				$attributeValue = $this->lenandoHelper->getAttributeValueSetShortFrontendName($variation, $settings, ' ', $this->attributeNameCombination[$variation->itemBase->id]);
+				$attributeValue = $this->lenandoHelper->getAttributeValueSetShortFrontendName($variation, $settings, '|', $this->attributeNameCombination[$variation->itemBase->id]);
 				if(count($variations) == 1)
 				{
 					$this->buildParentWithoutChildrenRow($variation, $settings);
@@ -247,55 +263,10 @@ class lenandoDE extends CSVGenerator
 	 */
 	private function buildParentWithoutChildrenRow(Record $item, KeyValue $settings)
 	{
-		if($item->variationBase->limitOrderByStockSelect == 2)
-		{
-			$variationAvailable = 1;
-			$inventoryManagementActive = 0;
-			$stock = 999;
-		}
-		elseif($item->variationBase->limitOrderByStockSelect == 1 && $item->variationStock->stockNet > 0)
-		{
-			$variationAvailable = 1;
-			$inventoryManagementActive = 1;
-			if($item->variationStock->stockNet > 999)
-			{
-				$stock = 999;
-			}
-			else
-			{
-				$stock = $item->variationStock->stockNet;
-			}
-		}
-		elseif($item->variationBase->limitOrderByStockSelect == 0)
-		{
-			$variationAvailable = 1;
-			$inventoryManagementActive = 0;
-			if($item->variationStock->stockNet > 999)
-			{
-				$stock = 999;
-			}
-			else
-			{
-				if($item->variationStock->stockNet > 0)
-				{
-					$stock = $item->variationStock->stockNet;
-				}
-				else
-				{
-					$stock = 0;
-				}
-			}
-		}
-		else
-		{
-			$variationAvailable = 0;
-			$inventoryManagementActive = 1;
-			$stock = 0;
-		}
-		
-
-		$unit = $this->getUnit($item);
-		$basePriceContent = (float)$item->variationBase->content;
+        $vat = $this->getVatClassId($item);
+        $stockList = $this->getStockList($item);
+        $priceList = $this->getPriceList($item, $settings);
+        $basePriceComponentList = $this->getBasePriceComponentList($item);
 		$data = [
 			'Produktname'			=> $this->lenandoHelper->getName($item, $settings, 150),
 			'Artikelnummer'			=> $item->itemBase->id,
@@ -364,29 +335,8 @@ class lenandoDE extends CSVGenerator
 	 */
 	private function buildParentWithChildrenRow(Record $item, KeyValue $settings, array $attributeName)
 	{
-        
-        if($item->variationBase->limitOrderByStockSelect == 2)
-        {
-            $inventoryManagementActive = 0;
-        }
-        elseif($item->variationBase->limitOrderByStockSelect == 1 && $item->variationStock->stockNet > 0)
-        {
-            $inventoryManagementActive = 1;
-        }
-        elseif($item->variationBase->limitOrderByStockSelect == 0)
-        {
-            $inventoryManagementActive = 0;
-        }
-        else
-        {
-            $inventoryManagementActive = 1;
-        }
-	
-		
-		
-		$unit = $this->getUnit($item);
-		$basePriceContent = (float)$item->variationBase->content;
-		
+        $vat = $this->getVatClassId($item);
+        $stockList = $this->getStockList($item);
 		$data = [
 			'Produktname'			=> $this->lenandoHelper->getName($item, $settings, 150),
 			'Artikelnummer'			=> $item->itemBase->id,
@@ -415,7 +365,7 @@ class lenandoDE extends CSVGenerator
 			'Eigenschaft1'			=> '',
 			'Familienname2'			=> '',
 			'Eigenschaft2'			=> '',
-			'ID'				=> 'BASE-'.$item->itemBase->id, //$item->itemBase->id,
+			'ID'				=> '', //$item->itemBase->id,
 			'Einheit'			=> $unit,
 			'Inhalt'			=> strlen($unit) > 0 ? $basePriceContent : '',
 			'Freifeld1'			=> $item->itemBase->free1,
@@ -455,52 +405,9 @@ class lenandoDE extends CSVGenerator
 	 */
 	private function buildChildRow(Record $item, KeyValue $settings, string $attributeValue = '')
 	{
-		if($item->variationBase->limitOrderByStockSelect == 2)
-		{
-			$variationAvailable = 1;
-			$stock = 999;
-		}
-		elseif($item->variationBase->limitOrderByStockSelect == 1 && $item->variationStock->stockNet > 0)
-		{
-			$variationAvailable = 1;
-			if($item->variationStock->stockNet > 999)
-			{
-				$stock = 999;
-			}
-			else
-			{
-				$stock = $item->variationStock->stockNet;
-			}
-		}
-		elseif($item->variationBase->limitOrderByStockSelect == 0)
-		{
-			$variationAvailable = 1;
-			if($item->variationStock->stockNet > 999)
-			{
-				$stock = 999;
-			}
-			else
-			{
-				if($item->variationStock->stockNet > 0)
-				{
-					$stock = $item->variationStock->stockNet;
-				}
-				else
-				{
-					$stock = 0;
-				}
-			}
-		}
-		else
-		{
-			$variationAvailable = 0;
-			$stock = 0;
-		}
-		
-		
-		
-		$unit = $this->getUnit($item);
-		$basePriceContent = (float)$item->variationBase->content;
+        $stockList = $this->getStockList($item);
+        $priceList = $this->getPriceList($item, $settings);
+        $basePriceComponentList = $this->getBasePriceComponentList($item);
 		$data = [
 			'Produktname'			=> $this->lenandoHelper->getName($item, $settings, 150),
 			'Artikelnummer'			=> $item->itemBase->id,
@@ -543,7 +450,7 @@ class lenandoDE extends CSVGenerator
 			'Freifeld9'			=> $item->itemBase->free9,
 			'Freifeld10'			=> $item->itemBase->free10,
 			'baseid'			=> 'BASE-'.$item->itemBase->id,
-			'basename'			=> $attributeValue, //$this->lenandoHelper->getAttributeName($item, $settings)
+			'basename'			=> $attributeValue, 
 			'level'				=> '0',
 			'status'			=> $variationAvailable,
 			'external_categories'		=> '1', //$item->variationStandardCategory->categoryId,
@@ -581,7 +488,7 @@ class lenandoDE extends CSVGenerator
 	}
 	/**
 	 * Returns the unit, if there is any unit configured, which is allowed
-	 * for the lenando.de API.
+	 * for the Rakuten.de API.
 	 *
 	 * @param  Record   $item
 	 * @return string
@@ -608,6 +515,33 @@ class lenandoDE extends CSVGenerator
 				return '';
 		}
 	}
+    /**
+     * Get id for vat
+     * @param Record $item
+     * @return int
+     */
+	private function getVatClassId(Record $item):int
+    {
+        $vat = $item->variationRetailPrice->vatValue;
+        if($vat == '10,7')
+        {
+            $vat = 4;
+        }
+        else if($vat == '7')
+        {
+            $vat = 2;
+        }
+        else if($vat == '0')
+        {
+            $vat = 3;
+        }
+        else
+        {
+            //bei anderen Steuersaetzen immer 19% nehmen
+            $vat = 1;
+        }
+        return $vat;
+    }
 	/**
 	 * Get item characters that match referrer from settings and a given component id.
 	 * @param  Record   $item
@@ -637,4 +571,128 @@ class lenandoDE extends CSVGenerator
 		}
 		return '';
 	}
+    /**
+     * Get necessary components to enable Rakuten to calculate a base price for the variation
+     * @param Record $item
+     * @return array
+     */
+	private function getBasePriceComponentList(Record $item):array
+    {
+        $unit = $this->getUnit($item);
+        $content = (float)$item->variationBase->content;
+        $convertBasePriceContentTag = $this->lenandoHelper->getConvertContentTag($content, 3);
+        if ($convertBasePriceContentTag == true && strlen($unit))
+        {
+            $content = $this->lenandoHelper->getConvertedBasePriceContent($content, $unit);
+            $unit = $this->lenandoHelper->getConvertedBasePriceUnit($unit);
+        }
+        return array(
+            'content'   =>  $content,
+            'unit'      =>  $unit,
+        );
+    }
+    /**
+     * Get all informations that depend on stock settings and stock volume
+     * (inventoryManagementActive, $variationAvailable, $stock)
+     * @param Record $item
+     * @return array
+     */
+    private function getStockList(Record $item):array
+    {
+        $inventoryManagementActive = 0;
+        $variationAvailable = 0;
+        $stock = 0;
+        if($item->variationBase->limitOrderByStockSelect == 2)
+        {
+            $variationAvailable = 1;
+            $inventoryManagementActive = 0;
+            $stock = 999;
+        }
+        elseif($item->variationBase->limitOrderByStockSelect == 1 && $item->variationStock->stockNet > 0)
+        {
+            $variationAvailable = 1;
+            $inventoryManagementActive = 1;
+            if($item->variationStock->stockNet > 999)
+            {
+                $stock = 999;
+            }
+            else
+            {
+                $stock = $item->variationStock->stockNet;
+            }
+        }
+        elseif($item->variationBase->limitOrderByStockSelect == 0)
+        {
+            $variationAvailable = 1;
+            $inventoryManagementActive = 0;
+            if($item->variationStock->stockNet > 999)
+            {
+                $stock = 999;
+            }
+            else
+            {
+                if($item->variationStock->stockNet > 0)
+                {
+                    $stock = $item->variationStock->stockNet;
+                }
+                else
+                {
+                    $stock = 0;
+                }
+            }
+        }
+        return array (
+            'stock'                     =>  $stock,
+            'variationAvailable'        =>  $variationAvailable,
+            'inventoryManagementActive' =>  $inventoryManagementActive,
+        );
+    }
+	/**
+     * Get a List of price, reduced price and the reference for the reduced price.
+     * @param Record $item
+     * @param KeyValue $settings
+     * @return array
+     */
+    private function getPriceList(Record $item, KeyValue $settings):array
+    {
+        $variationPrice = $this->lenandoHelper->getPrice($item);
+        $variationRrp = $this->lenandoHelper->getRecommendedRetailPrice($item, $settings);
+        $variationSpecialPrice = $this->lenandoHelper->getSpecialPrice($item, $settings);
+        //setting retail price as selling price without a reduced price
+        $price = $variationPrice;
+        $reducedPrice = '';
+        $referenceReducedPrice = '';
+        if ($price != '' || $price != 0.00)
+        {
+            //if recommended retail price is set and higher than retail price...
+            if ($variationRrp > 0 && $variationRrp > $variationPrice)
+            {
+                //set recommended retail price as selling price
+                $price = $variationRrp;
+                //set retail price as reduced price
+                $reducedPrice = $variationPrice;
+                //set recommended retail price as reference
+                $referenceReducedPrice = 'UVP';
+            }
+            // if special offer price is set and lower than retail price and recommended retail price is already set as reference...
+            if ($variationSpecialPrice > 0 && $variationPrice > $variationSpecialPrice && $referenceReducedPrice == 'UVP')
+            {
+                //set special offer price as reduced price
+                $reducedPrice = $variationSpecialPrice;
+            }
+            //if recommended retail price is not set as reference then ...
+            elseif ($variationSpecialPrice > 0 && $variationPrice > $variationSpecialPrice)
+            {
+                //set special offer price as reduced price and...
+                $reducedPrice = $variationSpecialPrice;
+                //set retail price as reference
+                $referenceReducedPrice = 'VK';
+            }
+        }
+        return array(
+            'price'                     =>  $price,
+            'reducedPrice'              =>  $reducedPrice,
+            'referenceReducedPrice'     =>  $referenceReducedPrice
+        );
+    }
 }
