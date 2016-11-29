@@ -511,7 +511,14 @@ class lenandoHelper
      * @param string    $delimiter
      * @return string
      */
-    public function getAttributeName(Record $item, KeyValue $settings, string $delimiter = ' '):string
+    /**
+     * Get the attributeNames
+     * @param Record    $item
+     * @param KeyValue  $settings
+     * @param string    $delimiter
+     * @return string
+     */
+    public function getAttributeName(Record $item, KeyValue $settings, string $delimiter = '|'):string
     {
         $values = [];
         if(!is_null($item->variationBase->attributeValueSetId))
