@@ -268,7 +268,7 @@ class lenandoDE extends CSVGenerator
         $priceList = $this->getPriceList($item, $settings);
         $basePriceComponentList = $this->getBasePriceComponentList($item);
 		$data = [
-			'Produktname'			=> $this->lenandoHelper->getName($item, $settings, 150),
+			'Produktname'			=> $this->lenandoHelper->getName($item, $settings, 150).' '.$attributeValue,
 			'Artikelnummer'			=> $item->itemBase->id,
 			'ean'				=> $this->lenandoHelper->getBarcodeByType($item, $settings->get('barcode')),
 			'Hersteller'			=> $this->lenandoHelper->getExternalManufacturerName($item->itemBase->producerId),
@@ -409,7 +409,7 @@ class lenandoDE extends CSVGenerator
         $priceList = $this->getPriceList($item, $settings);
         $basePriceComponentList = $this->getBasePriceComponentList($item);
 		$data = [
-			'Produktname'			=> $this->lenandoHelper->getName($item, $settings, 150),
+			'Produktname'			=> $this->lenandoHelper->getName($item, $settings, 150).' '.$attributeValue,
 			'Artikelnummer'			=> $item->itemBase->id,
 			'ean'				=> $this->lenandoHelper->getBarcodeByType($item, $settings->get('barcode')),
 			'Hersteller'			=> $this->lenandoHelper->getExternalManufacturerName($item->itemBase->producerId),
