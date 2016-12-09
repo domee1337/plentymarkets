@@ -658,7 +658,7 @@ class lenandoDE extends CSVGenerator
      */
      private function getImages(Record $item, KeyValue $settings, string $separator = ',', string $imageType = 'normal'):string
      {
-         $list = $this->elasticExportHelper->getImageList($item, $settings, $imageType);
+         $list = $this->lenandoHelper->getImageList($item, $settings, $imageType);
          if(count($list))
          {
              return implode($separator, $list);
