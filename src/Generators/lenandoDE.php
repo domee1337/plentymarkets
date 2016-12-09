@@ -665,7 +665,6 @@ class lenandoDE extends CSVGenerator
          }
          return '';
      }
-}	
 
 	/**
      * Get a List of price, reduced price and the reference for the reduced price.
