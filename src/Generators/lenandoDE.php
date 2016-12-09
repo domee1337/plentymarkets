@@ -647,6 +647,26 @@ class lenandoDE extends CSVGenerator
             'inventoryManagementActive' =>  $inventoryManagementActive,
         );
     }
+	
+/**
+     * Get images.
+     * @param  Record   $item
+     * @param  KeyValue $settings
+     * @param  string   $separator  = ','
+     * @param  string   $imageType  = 'normal'
+     * @return string
+     */
+     public function getImages(Record $item, KeyValue $settings, string $separator = ',', string $imageType = 'normal'):string
+     {
+         $list = $this->elasticExportHelper->getImageList($item, $settings, $imageType);
+         if(count($list))
+         {
+             return implode($separator, $list);
+         }
+         return '';
+     }
+}	
+
 	/**
      * Get a List of price, reduced price and the reference for the reduced price.
      * @param Record $item
