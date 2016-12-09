@@ -284,12 +284,12 @@ class lenandoDE extends CSVGenerator
 			'Lieferzeit'			=> $this->lenandoHelper->getAvailability($item, $settings, false),
 			'Nachnahmegebühr'		=> '',
 			'MPN'				=> $item->variationBase->model,
-			'Bildlink'			=> $this->getImages($item, $settings, ';', 'preview'),
-			'Bildlink2'			=> $this->getImageByNumber($item, $settings, 0),
-			'Bildlink3'			=> $this->getImageByNumber($item, $settings, 1),
-			'Bildlink4'			=> $this->getImageByNumber($item, $settings, 2),
-			'Bildlink5'			=> $this->getImageByNumber($item, $settings, 3),
-			'Bildlink6'			=> $this->getImageByNumber($item, $settings, 4),
+			'Bildlink'			=> $this->getImageByNumber($item, $settings, 0),
+			'Bildlink2'			=> $this->getImageByNumber($item, $settings, 1),
+			'Bildlink3'			=> $this->getImageByNumber($item, $settings, 2),
+			'Bildlink4'			=> $this->getImageByNumber($item, $settings, 3),
+			'Bildlink5'			=> $this->getImageByNumber($item, $settings, 4),
+			'Bildlink6'			=> $this->getImageByNumber($item, $settings, 5),
 			'Zustand'			=> 'neu',
 			'Familienname1'			=> '',
 			'Eigenschaft1'			=> '',
@@ -425,12 +425,12 @@ class lenandoDE extends CSVGenerator
 			'Lieferzeit'			=> $this->lenandoHelper->getAvailability($item, $settings, false),
 			'Nachnahmegebühr'		=> '',
 			'MPN'				=> $item->variationBase->model,
-			'Bildlink'			=> $this->getImages($item, $settings, ';', 'preview'),
-			'Bildlink2'			=> $this->getImageByNumber($item, $settings, 0),
-			'Bildlink3'			=> $this->getImageByNumber($item, $settings, 1),
-			'Bildlink4'			=> $this->getImageByNumber($item, $settings, 2),
-			'Bildlink5'			=> $this->getImageByNumber($item, $settings, 3),
-			'Bildlink6'			=> $this->getImageByNumber($item, $settings, 4),
+			'Bildlink'			=> $this->getImageByNumber($item, $settings, 0),
+			'Bildlink2'			=> $this->getImageByNumber($item, $settings, 1),
+			'Bildlink3'			=> $this->getImageByNumber($item, $settings, 2),
+			'Bildlink4'			=> $this->getImageByNumber($item, $settings, 3),
+			'Bildlink5'			=> $this->getImageByNumber($item, $settings, 4),
+			'Bildlink6'			=> $this->getImageByNumber($item, $settings, 5),
 			'Zustand'			=> 'neu',
 			'Familienname1'			=> '',
 			'Eigenschaft1'			=> '',
@@ -648,23 +648,6 @@ class lenandoDE extends CSVGenerator
         );
     }
 	
-/**
-     * Get images.
-     * @param  Record   $item
-     * @param  KeyValue $settings
-     * @param  string   $separator  = ','
-     * @param  string   $imageType  = 'normal'
-     * @return string
-     */
-     private function getImages(Record $item, KeyValue $settings, string $separator = ',', string $imageType = 'normal'):string
-     {
-         $list = $this->lenandoHelper->getImageList($item, $settings, $imageType);
-         if(count($list))
-         {
-             return implode($separator, $list);
-         }
-         return '';
-     }
 
 	/**
      * Get a List of price, reduced price and the reference for the reduced price.
