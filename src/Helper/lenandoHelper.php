@@ -112,7 +112,7 @@ class lenandoHelper
 	 */
 	private $marketAttributeHelperRepository;
     /**
-     * ElasticExportHelper constructor.
+     * lenandoHelper constructor.
      *
      * @param CategoryBranchRepositoryContract $categoryBranchRepository
      * @param UnitNameRepositoryContract $unitNameRepository
@@ -512,13 +512,6 @@ class lenandoHelper
      * @param string    $delimiter
      * @return string
      */
-    /**
-     * Get the attributeNames
-     * @param Record    $item
-     * @param KeyValue  $settings
-     * @param string    $delimiter
-     * @return string
-     */
     public function getAttributeName(Record $item, KeyValue $settings, string $delimiter = '|'):string
     {
         $values = [];
@@ -577,8 +570,7 @@ class lenandoHelper
                 $values = $unsortedValues;
             }
         }
-	$valuedata = implode($delimiter, $values);
-        return str_replace("|"," ",$valuedata);
+        return implode($delimiter, $values);
     }
     /**
      * getAttributeNameAndValueCombination
@@ -888,8 +880,6 @@ class lenandoHelper
 			'unit' => (string) $basePriceUnit
 		];
     }
-	
-	
     /**
      * getConvertContentTag
      * is used to check for too high values and to tag the necessity of converting
@@ -935,8 +925,6 @@ class lenandoHelper
         }
         return $unit;
     }
-	
-	
     /**
      * Get default currency from configuration.
      * @return string
@@ -972,7 +960,7 @@ class lenandoHelper
 	 * @param  KeyValue $settings
 	 * @return DefaultShipping|null
 	 */
-	public function getDefaultShipping(KeyValue $settings):DefaultShipping
+	public function getDefaultShipping(KeyValue $settings)
 	{
         $defaultShippingProfiles = $this->getConfig('plenty.order.shipping.default_shipping');
         foreach($defaultShippingProfiles as $defaultShippingProfile)
@@ -984,6 +972,27 @@ class lenandoHelper
         }
         return null;
 	}
+    /**
+     * Get the default shipping list.
+     * @return array|null
+     */
+    public function getDefaultShippingList()
+    {
+        $defaultShippingProfiles = $this->getConfig('plenty.order.shipping.default_shipping');
+        $list = [];
+        foreach($defaultShippingProfiles as $defaultShippingProfile)
+        {
+            if($defaultShippingProfile instanceof DefaultShipping)
+            {
+                $list[$defaultShippingProfile->id] = $defaultShippingProfile;
+            }
+        }
+        if(is_array($list) && count($list) > 0)
+        {
+            return $list;
+        }
+        return null;
+    }
     /**
      * Get custom configuration.
      * @param  string $key
