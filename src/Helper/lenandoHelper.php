@@ -30,10 +30,10 @@ use Plenty\Modules\Order\Shipping\Countries\Models\Country;
 use Plenty\Modules\System\Contracts\WebstoreRepositoryContract;
 use Plenty\Modules\System\Models\Webstore;
 /**
- * Class lenandoHelper
- * @package lenandoHelper\Helper
+ * Class ElasticExportHelper
+ * @package ElasticExportHelper\Helper
  */
-class lenandoHelper
+class ElasticExportHelper
 {
     const SHIPPING_COST_TYPE_FLAT = 'flat';
     const SHIPPING_COST_TYPE_CONFIGURATION = 'configuration';
@@ -62,7 +62,7 @@ class lenandoHelper
     /**
      * PropertyItemNameRepositoryContract $propertyItemNameRepository
      */
-    private $propertyItemNameRepository;
+    private $propertyNameRepository;
     /**
      * CategoryBranchMarketplaceRepositoryContract $categoryBranchMarketplaceRepository
      */
@@ -112,11 +112,11 @@ class lenandoHelper
 	 */
 	private $marketAttributeHelperRepository;
     /**
-     * lenandoHelper constructor.
+     * ElasticExportHelper constructor.
      *
      * @param CategoryBranchRepositoryContract $categoryBranchRepository
      * @param UnitNameRepositoryContract $unitNameRepository
-     * @param PropertyItemNameRepositoryContract $propertyItemNameRepository
+     * @param PropertyNameRepositoryContract $propertyNameRepository
      * @param CategoryBranchMarketplaceRepositoryContract $categoryBranchMarketplaceRepository
      * @param UrlBuilderRepositoryContract $urlBuilderRepository
      * @param CategoryRepositoryContract $categoryRepository
@@ -129,13 +129,13 @@ class lenandoHelper
 	 * @param MarketPropertyHelperRepositoryContract $marketPropertyHelperRepository
 	 * @param MarketAttributeHelperRepositoryContract $marketAttributeHelperRepository
      */
-	public function __construct(CategoryBranchRepositoryContract $categoryBranchRepository,
+    public function __construct(CategoryBranchRepositoryContract $categoryBranchRepository,
                                 UnitNameRepositoryContract $unitNameRepository,
                                 PropertyNameRepositoryContract $propertyNameRepository,
                                 CategoryBranchMarketplaceRepositoryContract $categoryBranchMarketplaceRepository,
                                 UrlBuilderRepositoryContract $urlBuilderRepository,
                                 CategoryRepositoryContract $categoryRepository,
-                        	PaymentMethodRepositoryContract $paymentMethodRepository,
+                        		PaymentMethodRepositoryContract $paymentMethodRepository,
                                 DefaultShippingCostRepositoryContract $defaultShippingCostRepository,
                                 ConfigRepository $configRepository,
                                 CountryRepositoryContract $countryRepository,
@@ -147,20 +147,20 @@ class lenandoHelper
     )
     {
         $this->categoryBranchRepository = $categoryBranchRepository;
-	$this->unitNameRepository = $unitNameRepository;
-	$this->propertyNameRepository = $propertyNameRepository;
+		$this->unitNameRepository = $unitNameRepository;
+		$this->propertyNameRepository = $propertyNameRepository;
         $this->categoryBranchMarketplaceRepository = $categoryBranchMarketplaceRepository;
         $this->urlBuilderRepository = $urlBuilderRepository;
         $this->categoryRepository = $categoryRepository;
-	$this->paymentMethodRepository = $paymentMethodRepository;
+		$this->paymentMethodRepository = $paymentMethodRepository;
         $this->defaultShippingCostRepository = $defaultShippingCostRepository;
         $this->configRepository = $configRepository;
         $this->countryRepository = $countryRepository;
         $this->webstoreRepository = $webstoreRepository;
-	$this->marketItemHelperRepository = $marketItemHelperRepository;
-	$this->marketCategoryHelperRepository = $marketCategoryHelperRepository;
-	$this->marketPropertyHelperRepository = $marketPropertyHelperRepository;
-	$this->marketAttributeHelperRepository = $marketAttributeHelperRepository;
+		$this->marketItemHelperRepository = $marketItemHelperRepository;
+		$this->marketCategoryHelperRepository = $marketCategoryHelperRepository;
+		$this->marketPropertyHelperRepository = $marketPropertyHelperRepository;
+		$this->marketAttributeHelperRepository = $marketAttributeHelperRepository;
     }
     /**
      * Get name.
