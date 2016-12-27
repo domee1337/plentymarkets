@@ -30,10 +30,10 @@ use Plenty\Modules\Order\Shipping\Countries\Models\Country;
 use Plenty\Modules\System\Contracts\WebstoreRepositoryContract;
 use Plenty\Modules\System\Models\Webstore;
 /**
- * Class ElasticExportHelper
- * @package ElasticExportHelper\Helper
+ * Class lenandoHelper
+ * @package lenandoHelper\Helper
  */
-class ElasticExportHelper
+class lenandoHelper
 {
     const SHIPPING_COST_TYPE_FLAT = 'flat';
     const SHIPPING_COST_TYPE_CONFIGURATION = 'configuration';
