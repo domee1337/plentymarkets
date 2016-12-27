@@ -128,13 +128,13 @@ class lenandoHelper
 	 * @param MarketPropertyHelperRepositoryContract $marketPropertyHelperRepository
 	 * @param MarketAttributeHelperRepositoryContract $marketAttributeHelperRepository
      */
-    public function __construct(CategoryBranchRepositoryContract $categoryBranchRepository,
+	public function __construct(CategoryBranchRepositoryContract $categoryBranchRepository,
                                 UnitNameRepositoryContract $unitNameRepository,
-                                PropertyItemNameRepositoryContract $propertyItemNameRepository,
+                                PropertyNameRepositoryContract $propertyNameRepository,
                                 CategoryBranchMarketplaceRepositoryContract $categoryBranchMarketplaceRepository,
                                 UrlBuilderRepositoryContract $urlBuilderRepository,
                                 CategoryRepositoryContract $categoryRepository,
-                        		PaymentMethodRepositoryContract $paymentMethodRepository,
+                        	PaymentMethodRepositoryContract $paymentMethodRepository,
                                 DefaultShippingCostRepositoryContract $defaultShippingCostRepository,
                                 ConfigRepository $configRepository,
                                 CountryRepositoryContract $countryRepository,
@@ -146,20 +146,20 @@ class lenandoHelper
     )
     {
         $this->categoryBranchRepository = $categoryBranchRepository;
-		$this->unitNameRepository = $unitNameRepository;
-		$this->propertyItemNameRepository = $propertyItemNameRepository;
+	$this->unitNameRepository = $unitNameRepository;
+	$this->propertyNameRepository = $propertyNameRepository;
         $this->categoryBranchMarketplaceRepository = $categoryBranchMarketplaceRepository;
         $this->urlBuilderRepository = $urlBuilderRepository;
         $this->categoryRepository = $categoryRepository;
-		$this->paymentMethodRepository = $paymentMethodRepository;
+	$this->paymentMethodRepository = $paymentMethodRepository;
         $this->defaultShippingCostRepository = $defaultShippingCostRepository;
         $this->configRepository = $configRepository;
         $this->countryRepository = $countryRepository;
         $this->webstoreRepository = $webstoreRepository;
-		$this->marketItemHelperRepository = $marketItemHelperRepository;
-		$this->marketCategoryHelperRepository = $marketCategoryHelperRepository;
-		$this->marketPropertyHelperRepository = $marketPropertyHelperRepository;
-		$this->marketAttributeHelperRepository = $marketAttributeHelperRepository;
+	$this->marketItemHelperRepository = $marketItemHelperRepository;
+	$this->marketCategoryHelperRepository = $marketCategoryHelperRepository;
+	$this->marketPropertyHelperRepository = $marketPropertyHelperRepository;
+	$this->marketAttributeHelperRepository = $marketAttributeHelperRepository;
     }
     /**
      * Get name.
@@ -780,12 +780,13 @@ class lenandoHelper
      */
     public function getItemCharacterByBackendName(Record $item, KeyValue $settings, string $backendName):string
     {
-        foreach($item->itemPropertyList as $itemProperty)
+        foreach($item->itemPropertyList as $property)
         {
-            $propertyItemName = $this->propertyItemNameRepository->findOne($itemProperty->propertyId, $settings->get('lang')? $settings->get('lang') : 'de');
-            if($propertyItemName->name == $backendName)
+            $propertyName = $this->propertyNameRepository->findOne($property->propertyId, $settings->get('lang')? $settings->get('lang') : 'de');
+            if($propertyName instanceof PropertyName &&
+				$propertyName->name == $backendName)
             {
-                return (string) $itemProperty->propertyValue;
+                return (string) $property->propertyValue;
             }
         }
         return '';
