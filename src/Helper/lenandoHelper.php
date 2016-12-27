@@ -571,7 +571,8 @@ class lenandoHelper
                 $values = $unsortedValues;
             }
         }
-        return implode($delimiter, $values);
+        $valuedata = implode($delimiter, $values);
+ 	return str_replace("|"," ",$valuedata);
     }
     /**
      * getAttributeNameAndValueCombination
