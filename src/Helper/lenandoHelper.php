@@ -526,7 +526,8 @@ class lenandoHelper
                 }
             }
         }
-        return implode($delimiter, $values);
+        $valuedata = implode($delimiter, $values);
+	return str_replace("|"," ",$valuedata);
     }
     /**
      * Get the attribute value set short frontend name. Ex. blue, XL
