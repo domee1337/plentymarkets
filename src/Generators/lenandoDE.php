@@ -267,6 +267,8 @@ class lenandoDE extends CSVGenerator
         $stockList = $this->getStockList($item);
         $priceList = $this->getPriceList($item, $settings);
         $basePriceComponentList = $this->getBasePriceComponentList($item);
+	$imageList = $this->getImageList($item, $settings);
+		
 		$data = [
 			'Produktname'			=> $this->lenandoHelper->getName($item, $settings, 150),
 			'Artikelnummer'			=> $item->itemBase->id,
@@ -284,12 +286,12 @@ class lenandoDE extends CSVGenerator
 			'Lieferzeit'			=> $this->lenandoHelper->getAvailability($item, $settings, false),
 			'Nachnahmegebühr'		=> '',
 			'MPN'				=> $item->variationBase->model,
-			'Bildlink'			=> $this->getImageByNumber($item, $settings, 0),
-			'Bildlink2'			=> $this->getImageByNumber($item, $settings, 1),
-			'Bildlink3'			=> $this->getImageByNumber($item, $settings, 2),
-			'Bildlink4'			=> $this->getImageByNumber($item, $settings, 3),
-			'Bildlink5'			=> $this->getImageByNumber($item, $settings, 4),
-			'Bildlink6'			=> $this->getImageByNumber($item, $settings, 5),
+			'Bildlink'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[0] : '',
+			'Bildlink2'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[1] : '',
+			'Bildlink3'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[2] : '',
+			'Bildlink4'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[3] : '',
+			'Bildlink5'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[4] : '',
+			'Bildlink6'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[5] : '',
 			'Zustand'			=> 'neu',
 			'Familienname1'			=> '',
 			'Eigenschaft1'			=> '',
@@ -354,12 +356,12 @@ class lenandoDE extends CSVGenerator
 			'Lieferzeit'			=> $this->lenandoHelper->getAvailability($item, $settings, false),
 			'Nachnahmegebühr'		=> '',
 			'MPN'				=> $item->variationBase->model,
-			'Bildlink'			=> $this->getImageByNumber($item, $settings, 0),
-			'Bildlink2'			=> $this->getImageByNumber($item, $settings, 1),
-			'Bildlink3'			=> $this->getImageByNumber($item, $settings, 2),
-			'Bildlink4'			=> $this->getImageByNumber($item, $settings, 3),
-			'Bildlink5'			=> $this->getImageByNumber($item, $settings, 4),
-			'Bildlink6'			=> $this->getImageByNumber($item, $settings, 5),
+			'Bildlink'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[0] : '',
+			'Bildlink2'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[1] : '',
+			'Bildlink3'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[2] : '',
+			'Bildlink4'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[3] : '',
+			'Bildlink5'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[4] : '',
+			'Bildlink6'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[5] : '',
 			'Zustand'			=> 'neu',
 			'Familienname1'			=> '',
 			'Eigenschaft1'			=> '',
@@ -408,6 +410,8 @@ class lenandoDE extends CSVGenerator
         $stockList = $this->getStockList($item);
         $priceList = $this->getPriceList($item, $settings);
         $basePriceComponentList = $this->getBasePriceComponentList($item);
+	$imageList = $this->getImageList($item, $settings);
+		
 		$data = [
 			'Produktname'			=> $this->lenandoHelper->getName($item, $settings, 150),
 			'Artikelnummer'			=> $item->itemBase->id,
@@ -425,12 +429,12 @@ class lenandoDE extends CSVGenerator
 			'Lieferzeit'			=> $this->lenandoHelper->getAvailability($item, $settings, false),
 			'Nachnahmegebühr'		=> '',
 			'MPN'				=> $item->variationBase->model,
-			'Bildlink'			=> $this->getImageByNumber($item, $settings, 0),
-			'Bildlink2'			=> $this->getImageByNumber($item, $settings, 1),
-			'Bildlink3'			=> $this->getImageByNumber($item, $settings, 2),
-			'Bildlink4'			=> $this->getImageByNumber($item, $settings, 3),
-			'Bildlink5'			=> $this->getImageByNumber($item, $settings, 4),
-			'Bildlink6'			=> $this->getImageByNumber($item, $settings, 5),
+			'Bildlink'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[0] : '',
+			'Bildlink2'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[1] : '',
+			'Bildlink3'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[2] : '',
+			'Bildlink4'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[3] : '',
+			'Bildlink5'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[4] : '',
+			'Bildlink6'			=> count($imageList) > 0 && array_key_exists(0, $imageList) ? $imageList[5] : '',
 			'Zustand'			=> 'neu',
 			'Familienname1'			=> '',
 			'Eigenschaft1'			=> '',
@@ -648,6 +652,27 @@ class lenandoDE extends CSVGenerator
         );
     }
 	
+private function getImageList(Record $item, KeyValue $settings)
+    {
+        $list = array();
+        foreach ($item->variationImageList['variationImages']->toArray() as $variationImage)
+        {
+            $list[] = $this->urlBuilderRepository->getImageUrl($variationImage['path'], $settings->get('plentyId'), 'normal', $variationImage['fileType'], $variationImage['type'] == 'external');
+            if(count($list) == 3)
+            {
+                return $list;
+            }
+        }
+        foreach ($item->variationImageList['itemImages']->toArray() as $variationImage)
+        {
+            $list[] = $this->urlBuilderRepository->getImageUrl($variationImage['path'], $settings->get('plentyId'), 'normal', $variationImage['fileType'], $variationImage['type'] == 'external');
+            if(count($list) == 3)
+            {
+                return $list;
+            }
+        }
+        return $list;
+    }
 
 	/**
      * Get a List of price, reduced price and the reference for the reduced price.
