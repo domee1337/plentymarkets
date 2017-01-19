@@ -339,6 +339,9 @@ class lenandoDE extends CSVGenerator
 	{
         $vat = $this->getVatClassId($item);
         $stockList = $this->getStockList($item);
+	$imageList = $this->getImageList($item, $settings);
+		
+		
 		$data = [
 			'Produktname'			=> $this->lenandoHelper->getName($item, $settings, 150),
 			'Artikelnummer'			=> $item->itemBase->id,
