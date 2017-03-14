@@ -5,7 +5,7 @@
    "pluginIcon"        : "icon_plugin_xs.png",
    "price"             : 0.00,
    "description"       : "Plentymarkets lenando Export",
-   "shortDescription"  : {"de": "Produktexport für den lenando Marktplatz","en": "Plentymarkets Productexport for lenando Marketplace"},
+   "shortDescription"  : {"de": "Produktexport für den lenando Marktplatz","en": "Product Export for lenando Marketplace"},
    "categories"        : ["3519"],
    "author"            : "neofire",
    "authorIcon"        : "icon_author_xs.png",
