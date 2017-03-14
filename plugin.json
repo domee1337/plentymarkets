@@ -1,8 +1,20 @@
 {
-  "name": "lenando",
-  "description": null,
-  "namespace": "lenando",
-  "author": "lenando",
-  "type": "export",
-  "serviceProvider": "lenando\\lenandoServiceProvider"
+   "version"           : "1.0.0",
+   "name"              : "lenando",
+   "license"           : "AGPL-3.0",
+   "pluginIcon"        : "icon_plugin_xs.png",
+   "price"             : 0.00,
+   "description"       : "Plentymarkets lenando Export",
+   "shortDescription"  : {"de": "Produktexport für den lenando Marktplatz","en": "Plentymarkets Productexport for lenando Marketplace"},
+   "categories"        : ["3519"],
+   "author"            : "neofire",
+   "authorIcon"        : "icon_author_xs.png",
+   "email"             : "info@neofire.de",
+   "phone"             : "+49 571 40 41 733",
+   "keywords"          : ["marktplatz", "marketing", "export", "neofire", "lenando"],
+   "type"              : "export",
+   "namespace"         : "lenando",
+   "serviceProvider"   : "lenando\\lenandoServiceProvider",
+   "javaScriptFiles"   : [],
+   "containers"        : []
 }
