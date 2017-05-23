@@ -263,6 +263,21 @@ class lenandoDE extends CSVGenerator
 	 */
 	private function buildParentWithoutChildrenRow(Record $item, KeyValue $settings)
 	{
+		
+	$attributes = '';
+	$attributeName = $this->lenandoHelper->getAttributeName($item, $settings, ',');
+	$attributeValue = $this->lenandoHelper->getAttributeValueSetShortFrontendName($item, $settings, ',');
+	if (strlen($attributeName) && strlen($attributeValue))
+	{
+		$attributes = $this->lenandoHelper->getAttributeNameAndValueCombination($attributeName, $attributeValue);
+		$zustand = $this->lenandoHelper->getAttributeNameZustand($attributeName, $attributeValue);
+	}
+		
+	if($zustand == ''){ 
+		$zustand = 'neu';
+	}
+	
+		
         $vat = $this->getVatClassId($item);
         $stockList = $this->getStockList($item);
         $priceList = $this->getPriceList($item, $settings);
@@ -290,7 +305,7 @@ class lenandoDE extends CSVGenerator
 			'Bildlink4'			=> $this->getImageByNumber($item, $settings, 3),
 			'Bildlink5'			=> $this->getImageByNumber($item, $settings, 4),
 			'Bildlink6'			=> $this->getImageByNumber($item, $settings, 5),
-			'Zustand'			=> 'neu',
+			'Zustand'			=> $zustand,
 			'Familienname1'			=> '',
 			'Eigenschaft1'			=> '',
 			'Familienname2'			=> '',
@@ -309,7 +324,7 @@ class lenandoDE extends CSVGenerator
 			'Freifeld9'			=> $item->itemBase->free9,
 			'Freifeld10'			=> $item->itemBase->free10,
 			'baseid'			=> 'BASE-'.$item->itemBase->id,
-			'basename'			=> $attributeValue,
+			'basename'			=> $attributes,
 			'level'				=> '0',
 			'status'			=> $variationAvailable,
 			'external_categories'		=> '1', //$item->variationStandardCategory->categoryId,
@@ -335,6 +350,7 @@ class lenandoDE extends CSVGenerator
 	 */
 	private function buildParentWithChildrenRow(Record $item, KeyValue $settings, array $attributeName)
 	{
+		
         $vat = $this->getVatClassId($item);
         $stockList = $this->getStockList($item);
 		$data = [
@@ -405,6 +421,20 @@ class lenandoDE extends CSVGenerator
 	 */
 	private function buildChildRow(Record $item, KeyValue $settings, string $attributeValue = '')
 	{
+		
+	$attributes = '';
+	$attributeName = $this->lenandoHelper->getAttributeName($item, $settings, ',');
+	$attributeValue = $this->lenandoHelper->getAttributeValueSetShortFrontendName($item, $settings, ',');
+	if (strlen($attributeName) && strlen($attributeValue))
+	{
+		$attributes = $this->lenandoHelper->getAttributeNameAndValueCombination($attributeName, $attributeValue);
+		$zustand = $this->lenandoHelper->getAttributeNameZustand($attributeName, $attributeValue);
+	}
+	
+	if($zustand == ''){ 
+		$zustand = 'neu';
+	}
+		
         $stockList = $this->getStockList($item);
         $priceList = $this->getPriceList($item, $settings);
         $basePriceComponentList = $this->getBasePriceComponentList($item);
@@ -431,7 +461,7 @@ class lenandoDE extends CSVGenerator
 			'Bildlink4'			=> $this->getImageByNumber($item, $settings, 3),
 			'Bildlink5'			=> $this->getImageByNumber($item, $settings, 4),
 			'Bildlink6'			=> $this->getImageByNumber($item, $settings, 5),
-			'Zustand'			=> 'neu',
+			'Zustand'			=> $zustand,
 			'Familienname1'			=> '',
 			'Eigenschaft1'			=> '',
 			'Familienname2'			=> '',
@@ -450,7 +480,7 @@ class lenandoDE extends CSVGenerator
 			'Freifeld9'			=> $item->itemBase->free9,
 			'Freifeld10'			=> $item->itemBase->free10,
 			'baseid'			=> 'BASE-'.$item->itemBase->id,
-			'basename'			=> $attributeValue, 
+			'basename'			=> $attributes, 
 			'level'				=> '0',
 			'status'			=> $variationAvailable,
 			'external_categories'		=> '1', //$item->variationStandardCategory->categoryId,
