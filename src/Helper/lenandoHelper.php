@@ -527,7 +527,7 @@ class lenandoHelper
             }
         }
         $valuedata = implode($delimiter, $values);
-	return str_replace("|"," ",$valuedata);
+	return str_replace("|"," ,",$valuedata);
     }
     /**
      * Get the attribute value set short frontend name. Ex. blue, XL
@@ -607,6 +607,29 @@ class lenandoHelper
         }
         return $attributes;
     }
+	
+public function getAttributeNameZustand(string $attributeNames, string $attributeValues, string $delimiter = ','):string
+    {
+        $attributes='';
+        $attributeNameList = array();
+        $attributeValueList = array();
+        if (strlen($attributeNames) && strlen($attributeValues))
+        {
+            $attributeNameList = explode(',', $attributeNames);
+            $attributeValueList = explode(',', $attributeValues);
+        }
+        if (count($attributeNameList) && count($attributeValueList))
+        {
+            foreach ($attributeNameList as $index => $attributeName)
+            {
+               	    if($attributeNameList[$index] == 'Zustand'){
+                    $attributes = $attributeValueList[$index];
+		    }
+            }
+        }
+        return $attributes;
+    }
+	
     /**
      * Get base price.
      * @param  Record   $item
