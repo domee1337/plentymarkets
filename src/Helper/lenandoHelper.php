@@ -601,7 +601,7 @@ class lenandoHelper
                 }
                 else
                 {
-                    $attributes .= $delimiter. ' ' . $attributeNameList[$index]. ': ' . $attributeValueList[$index];
+                    $attributes .= ' ' . $attributeNameList[$index]. ': ' . $attributeValueList[$index];
                 }
             }
         }
