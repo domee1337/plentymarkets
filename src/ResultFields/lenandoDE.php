@@ -108,6 +108,7 @@ class lenandoDE extends ResultFields
 				'id',
 				'limitOrderByStockSelect',
 				'model',
+				'weightG',
 				'unitId',
 				'vatId',
                 'primaryVariation',
