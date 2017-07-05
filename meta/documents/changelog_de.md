@@ -3,8 +3,8 @@
 ## v1.0.1 (2017-07-05)
 
 ### Hinzugefügt
-- Katalogstruktur eingebunden
-- Gewicht eingebunden
+- Katalogstruktur hinzugefügt
+- Gewicht hinzugefügt
 
 ## v1.0.0 (2017-03-13)
 
