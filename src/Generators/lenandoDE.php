@@ -627,7 +627,7 @@ class lenandoDE extends CSVGenerator
 			case '49':
 				return 'Unze';
 			case '50':
-				return 'Wascheinheiten';
+				return 'Wascheinheit';
 			case '51':
 				return 'cm';
 			case '52':
