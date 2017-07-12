@@ -527,20 +527,112 @@ class lenandoDE extends CSVGenerator
 	{
 		switch((int) $item->variationBase->unitId)
 		{
-			case '32':
-				return 'ml'; // Milliliter
-			case '5':
-				return 'l'; // Liter
-			case '3':
-				return 'g'; // Gramm
+		
+			case '1':
+				return 'Stück';
 			case '2':
-				return 'kg'; // Kilogramm
-			case '51':
-				return 'cm'; // Zentimeter
+				return 'kg';
+			case '3':
+				return 'g';
+			case '4':
+				return 'mg';
+			case '5':
+				return 'l';
+			case '6':
+				return '12 Stück';
+			case '7':
+				return '2er Pack';
+			case '8':
+				return 'Ballen';
+			case '9':
+				return 'Behälter';
+			case '10':
+				return 'Beutel';
+			case '11':
+				return 'Blatt';
+			case '12':
+				return 'Block';
+			case '13':
+				return 'Block';
+			case '14':
+				return 'Bogen';
+			case '15':
+				return 'Box';
+			case '16':
+				return 'Bund';
+			case '17':
+				return 'Container';
+			case '18':
+				return 'Dose';
+			case '19':
+				return 'Dose/Büchse';
+			case '20':
+				return 'Dutzend';
+			case '21':
+				return 'Eimer';
+			case '22':
+				return 'Etui';
+			case '23':
+				return 'Fass';
+			case '24':
+				return 'Flasche';
+			case '25':
+				return 'Flüssigunze';
+			case '26':
+				return 'Glas/Gefäß';
+			case '27':
+				return 'Karton';
+			case '28':
+				return 'Kartonage';
+			case '29':
+				return 'Kit';
+			case '30':
+				return 'Knäuel';
 			case '31':
-				return 'm'; // Meter
+				return 'm';
+			case '32':
+				return 'ml';
+			case '33':
+				return 'mm';
+			case '34':
+				return 'Paar';
+			case '35':
+				return 'Päckchen';
+			case '36':
+				return 'Paket';
+			case '37':
+				return 'Palette';
 			case '38':
-				return 'm²'; // Quadratmeter
+				return 'm²';
+			case '39':
+				return 'cm²';
+			case '40':
+				return 'mm²';
+			case '41':
+				return 'cm²';
+			case '42':
+				return 'mm²';
+			case '43':
+				return 'Rolle';
+			case '44':
+				return 'Sack';
+			case '45':
+				return 'Satz';
+			case '46':
+				return 'Spule';
+			case '47':
+				return 'Stück';
+			case '48':
+				return 'Tube/Rohr';
+			case '49':
+				return 'Unze';
+			case '50':
+				return 'Wascheinheiten';
+			case '51':
+				return 'cm';
+			case '52':
+				return 'Zoll';
+			
 			default:
 				return '';
 		}
